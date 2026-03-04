@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { TEMPLATES, TEMPLATE_CATEGORIES, type TemplateInfo } from './template-registry'
@@ -17,7 +16,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   minimal: 'Minimal',
 }
 
-export function TemplateGallery({ selectMode = false }: { selectMode?: boolean }) {
+export function TemplateGallery() {
   const [activeCategory, setActiveCategory] = useState<string>('all')
 
   const filtered =
@@ -62,26 +61,21 @@ export function TemplateGallery({ selectMode = false }: { selectMode?: boolean }
       {/* Template Grid */}
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filtered.map((template) => (
-          <TemplateCard key={template.id} template={template} selectMode={selectMode} />
+          <TemplateCard key={template.id} template={template} />
         ))}
       </div>
     </div>
   )
 }
 
-function TemplateCard({ template, selectMode }: { template: TemplateInfo; selectMode: boolean }) {
-  const router = useRouter()
+function TemplateCard({ template }: { template: TemplateInfo }) {
   const [isPending, startTransition] = useTransition()
   const scale = 220 / PAGE_WIDTH
 
   function handleSelect() {
-    if (selectMode) {
-      startTransition(async () => {
-        await createResume(template.id)
-      })
-    } else {
-      router.push('/login')
-    }
+    startTransition(async () => {
+      await createResume(template.id)
+    })
   }
 
   return (
@@ -115,7 +109,7 @@ function TemplateCard({ template, selectMode }: { template: TemplateInfo; select
             onClick={handleSelect}
             disabled={isPending}
           >
-            {isPending ? 'Creating...' : selectMode ? 'Start with This' : 'Use Template'}
+            {isPending ? 'Creating...' : 'Use Template'}
           </Button>
         </div>
       </div>

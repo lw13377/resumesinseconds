@@ -30,7 +30,7 @@ export default async function TemplatesPage({
               : 'Choose from 20 professionally designed templates. Customize colors, fonts, and content to make it yours.'}
           </p>
         </div>
-        <TemplateGallery selectMode={selectMode} />
+        <TemplateGallery />
       </main>
       <Footer />
     </div>
