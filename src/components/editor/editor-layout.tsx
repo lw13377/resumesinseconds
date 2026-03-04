@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Toolbar } from './toolbar'
 import { FormPanel } from './form-panel'
+import { PreviewPanel } from './preview-panel'
 
 export function EditorLayout() {
   const [mobileView, setMobileView] = useState<'form' | 'preview'>('form')
@@ -58,16 +59,11 @@ export function EditorLayout() {
         {/* Preview Panel (right) */}
         <div
           className={cn(
-            'flex w-full flex-1 items-center justify-center bg-muted/30',
-            mobileView === 'form' && 'hidden md:flex'
+            'w-full flex-1 overflow-hidden',
+            mobileView === 'form' && 'hidden md:block'
           )}
         >
-          <div className="text-center">
-            <FileText className="mx-auto h-12 w-12 text-muted-foreground/50" />
-            <p className="mt-3 text-sm text-muted-foreground">
-              Preview will appear here
-            </p>
-          </div>
+          <PreviewPanel />
         </div>
       </div>
     </div>
