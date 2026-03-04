@@ -11,6 +11,7 @@ import {
   Loader2,
   Palette,
 } from 'lucide-react'
+import { DownloadModal } from './download-modal'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -115,6 +116,7 @@ export function Toolbar() {
   } = useResume()
 
   const [showColorPicker, setShowColorPicker] = useState(false)
+  const [showDownload, setShowDownload] = useState(false)
 
   return (
     <div className="border-b bg-background">
@@ -141,11 +143,13 @@ export function Toolbar() {
         <SaveIndicator status={saveStatus} />
 
         <div className="ml-auto">
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={() => setShowDownload(true)}>
             <Download className="h-4 w-4" />
             <span className="hidden sm:inline">Download PDF</span>
           </Button>
         </div>
+
+        <DownloadModal open={showDownload} onOpenChange={setShowDownload} />
       </div>
 
       {/* Bottom row: template, font, color */}
