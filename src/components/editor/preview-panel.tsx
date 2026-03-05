@@ -139,7 +139,10 @@ export function PreviewPanel() {
           <Button
             variant="default"
             size="sm"
-            onClick={() => setShowDownload(true)}
+            onClick={async () => {
+              if (hasUnsavedChanges) await saveResume()
+              setShowDownload(true)
+            }}
           >
             <FileDown className="h-4 w-4" />
             <span className="hidden sm:inline">Download</span>
