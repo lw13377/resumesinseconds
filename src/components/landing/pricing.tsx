@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
-import { checkSubscription } from "@/lib/actions/subscription";
 
 interface PricingFeature {
   text: string;
@@ -73,7 +72,20 @@ export function Pricing() {
     supabase.auth.getUser().then(({ data }) => {
       setIsLoggedIn(!!data.user)
       if (data.user) {
-        checkSubscription().then(setIsSubscribed)
+        supabase
+          .from('profiles')
+          .select('is_subscribed, subscription_expires_at')
+          .eq('id', data.user.id)
+          .single()
+          .then(({ data: profile }) => {
+            if (
+              profile?.is_subscribed &&
+              (!profile.subscription_expires_at ||
+                new Date(profile.subscription_expires_at) > new Date())
+            ) {
+              setIsSubscribed(true)
+            }
+          })
       }
     })
   }, [])
