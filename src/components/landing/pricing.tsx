@@ -16,12 +16,14 @@ interface PricingFeature {
 interface PricingPlan {
   name: string;
   price: string;
+  originalPrice?: string;
   period: string;
   description: string;
   features: PricingFeature[];
   cta: string;
   href: string;
   highlighted: boolean;
+  introNote?: string;
 }
 
 const plans: PricingPlan[] = [
@@ -42,7 +44,8 @@ const plans: PricingPlan[] = [
   },
   {
     name: "Pro",
-    price: "$2",
+    price: "$1.99",
+    originalPrice: "$6.99",
     period: "/month",
     description: "Export and share your resumes with the world",
     features: [
@@ -54,6 +57,7 @@ const plans: PricingPlan[] = [
     cta: "Get Pro",
     href: "/login?redirect=/dashboard",
     highlighted: true,
+    introNote: "$1.99 for the first month, then $6.99/mo. Cancel anytime.",
   },
 ];
 
@@ -132,11 +136,17 @@ export function Pricing() {
               {/* Plan header */}
               <div className="mb-6">
                 <h3 className="text-lg font-semibold">{plan.name}</h3>
-                <div className="mt-3 flex items-baseline gap-1">
+                <div className="mt-3 flex items-baseline gap-2">
+                  {plan.originalPrice && (
+                    <span className="text-xl text-muted-foreground line-through">{plan.originalPrice}</span>
+                  )}
                   <span className="text-4xl font-bold tracking-tight">{plan.price}</span>
                   <span className="text-sm text-muted-foreground">{plan.period}</span>
                 </div>
                 <p className="mt-2 text-sm text-muted-foreground">{plan.description}</p>
+                {plan.introNote && (
+                  <p className="mt-2 text-xs text-muted-foreground/80">{plan.introNote}</p>
+                )}
               </div>
 
               {/* Divider */}

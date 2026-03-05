@@ -161,10 +161,12 @@ export function DownloadModal({ open, onOpenChange }: DownloadModalProps) {
                   <p className="text-sm text-muted-foreground">Unlimited PDF downloads</p>
                 </div>
                 <div className="text-right">
-                  <span className="text-2xl font-bold">$2</span>
+                  <span className="text-lg text-muted-foreground line-through">$6.99</span>
+                  <span className="ml-1.5 text-2xl font-bold">$1.99</span>
                   <span className="text-sm text-muted-foreground">/mo</span>
                 </div>
               </div>
+              <p className="mt-2 text-xs text-muted-foreground">$1.99 for the first month, then $6.99/mo. Cancel anytime.</p>
             </div>
             <Button className="w-full" size="lg" asChild>
               <Link href="/login">
@@ -249,10 +251,12 @@ export function DownloadModal({ open, onOpenChange }: DownloadModalProps) {
                 <p className="text-sm text-muted-foreground">Unlimited PDF downloads</p>
               </div>
               <div className="text-right">
-                <span className="text-2xl font-bold">$2</span>
+                <span className="text-lg text-muted-foreground line-through">$6.99</span>
+                <span className="ml-1.5 text-2xl font-bold">$1.99</span>
                 <span className="text-sm text-muted-foreground">/mo</span>
               </div>
             </div>
+            <p className="mt-2 text-xs text-muted-foreground">$1.99 for the first month, then $6.99/mo. Cancel anytime.</p>
             <ul className="mt-3 space-y-1.5 text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
                 <Sparkles className="h-3.5 w-3.5 text-primary" />
@@ -281,7 +285,7 @@ export function DownloadModal({ open, onOpenChange }: DownloadModalProps) {
             ) : (
               <CreditCard className="h-4 w-4" />
             )}
-            {subscribing ? 'Redirecting to checkout...' : 'Subscribe — $2/mo'}
+            {subscribing ? 'Redirecting to checkout...' : 'Subscribe — $1.99/mo'}
           </Button>
 
           {/* Dev bypass — only in development */}

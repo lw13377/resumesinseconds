@@ -39,7 +39,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-semibold text-foreground">4. Subscriptions and Payments</h2>
             <ul className="mt-2 list-disc space-y-1 pl-6">
-              <li>The Pro plan costs $2/month, billed monthly</li>
+              <li>The Pro plan costs $1.99 for the first month, then $6.99/month, billed monthly</li>
               <li>Payments are processed securely by Stripe</li>
               <li>You can cancel your subscription at any time from your dashboard</li>
               <li>Cancellation takes effect at the end of your current billing period</li>

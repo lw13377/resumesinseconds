@@ -49,6 +49,9 @@ export async function POST() {
           quantity: 1,
         },
       ],
+      ...(process.env.STRIPE_INTRO_COUPON_ID && {
+        discounts: [{ coupon: process.env.STRIPE_INTRO_COUPON_ID }],
+      }),
       success_url: `${appUrl}/dashboard?subscription=success`,
       cancel_url: `${appUrl}/dashboard?subscription=cancelled`,
       metadata: { supabase_user_id: user.id },
