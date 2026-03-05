@@ -1,13 +1,13 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { TEMPLATES, TEMPLATE_CATEGORIES, type TemplateInfo } from './template-registry'
 import { TemplateRenderer } from './template-renderer'
 import { SAMPLE_RESUME } from '@/lib/sample-data'
 import { PAGE_WIDTH, PAGE_HEIGHT } from './base-styles'
+import { createResume } from '@/lib/actions/resume'
 
 const CATEGORY_LABELS: Record<string, string> = {
   professional: 'Professional',
@@ -18,7 +18,6 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export function TemplateGallery() {
   const [activeCategory, setActiveCategory] = useState<string>('all')
-  const router = useRouter()
 
   const filtered =
     activeCategory === 'all'
@@ -70,8 +69,14 @@ export function TemplateGallery() {
 }
 
 function TemplateCard({ template }: { template: TemplateInfo }) {
-  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
   const scale = 220 / PAGE_WIDTH
+
+  function handleSelect() {
+    startTransition(async () => {
+      await createResume(template.id)
+    })
+  }
 
   return (
     <div className="group flex flex-col">
@@ -101,12 +106,20 @@ function TemplateCard({ template }: { template: TemplateInfo }) {
         <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/40 group-hover:opacity-100">
           <Button
             size="sm"
-            onClick={() => router.push('/login')}
+            onClick={handleSelect}
+            disabled={isPending}
           >
-            Use Template
+            {isPending ? 'Creating...' : 'Use Template'}
           </Button>
         </div>
       </div>
+
+      {/* New badge */}
+      {template.isNew && (
+        <div className="absolute top-2 right-2 z-10 rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-primary-foreground shadow-sm">
+          New
+        </div>
+      )}
 
       {/* Info */}
       <div className="mt-3">

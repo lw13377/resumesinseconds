@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { createResume } from '@/lib/actions/resume'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -17,7 +18,18 @@ import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
+  )
+}
+
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirect') || '/dashboard'
+  const templateId = searchParams.get('template')
   const supabase = createClient()
 
   // Sign In state
@@ -52,7 +64,11 @@ export default function LoginPage() {
         return
       }
 
-      router.push('/dashboard')
+      if (templateId) {
+        await createResume(templateId)
+        return
+      }
+      router.push(redirectTo)
     } catch {
       setError('An unexpected error occurred. Please try again.')
     } finally {

@@ -1,9 +1,10 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { lightenColor, pageContainerStyle } from '../base-styles'
+import { lightenColor, pageContainerStyle, isSectionHidden } from '../base-styles'
 
 export default function SleekTemplate({ content, themeColor, fontFamily }: TemplateProps) {
   const { personal, summary, experience, education, skills, projects, certifications, languages } = content
+  const allSkills = skills.flatMap(s => s.items)
 
   const sectionHeadingStyle: React.CSSProperties = {
     fontSize: '12px',
@@ -110,7 +111,7 @@ export default function SleekTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Summary */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div>
             <h2 style={sectionHeadingStyle}>Summary</h2>
             <p style={{ margin: 0, color: '#444', lineHeight: 1.65, fontSize: '10px' }}>{summary}</p>
@@ -118,7 +119,7 @@ export default function SleekTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div>
             <h2 style={sectionHeadingStyle}>Experience</h2>
             {experience.map((exp) => (
@@ -150,7 +151,7 @@ export default function SleekTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div>
             <h2 style={sectionHeadingStyle}>Education</h2>
             {education.map((edu) => (
@@ -180,28 +181,19 @@ export default function SleekTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Skills */}
-        {skills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div>
             <h2 style={sectionHeadingStyle}>Skills</h2>
-            {skills.map((cat) => (
-              <div key={cat.id} style={{ marginBottom: '8px' }}>
-                {cat.category && (
-                  <div style={{ fontWeight: 600, fontSize: '10px', color: '#333', marginBottom: '5px' }}>
-                    {cat.category}
-                  </div>
-                )}
-                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                  {cat.items.map((item, i) => (
-                    <span key={i} style={pillStyle}>{item}</span>
-                  ))}
-                </div>
-              </div>
-            ))}
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+              {allSkills.map((skill, i) => (
+                <span key={i} style={pillStyle}>{skill}</span>
+              ))}
+            </div>
           </div>
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div>
             <h2 style={sectionHeadingStyle}>Projects</h2>
             {projects.map((proj) => (
@@ -228,7 +220,7 @@ export default function SleekTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Certifications */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
           <div>
             <h2 style={sectionHeadingStyle}>Certifications</h2>
             {certifications.map((cert) => (
@@ -244,7 +236,7 @@ export default function SleekTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Languages */}
-        {languages.length > 0 && (
+        {languages.length > 0 && !isSectionHidden(content, 'languages') && (
           <div>
             <h2 style={sectionHeadingStyle}>Languages</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>

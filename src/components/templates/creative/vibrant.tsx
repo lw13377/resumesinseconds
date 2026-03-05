@@ -1,9 +1,10 @@
 import React from 'react'
 import type { TemplateProps } from '@/components/templates/base-styles'
-import { hexToRgb, lightenColor, darkenColor, pageContainerStyle } from '@/components/templates/base-styles'
+import { hexToRgb, lightenColor, darkenColor, pageContainerStyle, isSectionHidden } from '@/components/templates/base-styles'
 
 export default function VibrantTemplate({ content, themeColor, fontFamily }: TemplateProps) {
   const { personal, summary, experience, education, skills, projects, certifications, languages } = content
+  const allSkills = skills.flatMap(s => s.items)
 
   const { r, g, b } = hexToRgb(themeColor)
   const tintBg = lightenColor(themeColor, 0.92)
@@ -149,7 +150,7 @@ export default function VibrantTemplate({ content, themeColor, fontFamily }: Tem
       {/* Body */}
       <div style={{ padding: '8px 0 20px 0' }}>
         {/* Summary */}
-        {summary && (() => {
+        {summary && !isSectionHidden(content, 'summary') && (() => {
           const bg = getSectionBg()
           return (
             <div style={sectionStyle(bg)}>
@@ -176,7 +177,7 @@ export default function VibrantTemplate({ content, themeColor, fontFamily }: Tem
         })()}
 
         {/* Experience */}
-        {experience.length > 0 && (() => {
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (() => {
           const bg = getSectionBg()
           return (
             <div style={sectionStyle(bg)}>
@@ -230,7 +231,7 @@ export default function VibrantTemplate({ content, themeColor, fontFamily }: Tem
         })()}
 
         {/* Education */}
-        {education.length > 0 && (() => {
+        {education.length > 0 && !isSectionHidden(content, 'education') && (() => {
           const bg = getSectionBg()
           return (
             <div style={sectionStyle(bg)}>
@@ -282,7 +283,7 @@ export default function VibrantTemplate({ content, themeColor, fontFamily }: Tem
         })()}
 
         {/* Skills */}
-        {skills.length > 0 && (() => {
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (() => {
           const bg = getSectionBg()
           return (
             <div style={sectionStyle(bg)}>
@@ -290,42 +291,33 @@ export default function VibrantTemplate({ content, themeColor, fontFamily }: Tem
                 <div style={dotDecor} />
                 Skills
               </h2>
-              {skills.map((cat) => (
-                <div key={cat.id} style={{ marginBottom: '10px' }}>
-                  {cat.category && (
-                    <div style={{ fontWeight: 700, fontSize: '10px', color: darkAccent, marginBottom: '5px' }}>
-                      {cat.category}
-                    </div>
-                  )}
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
-                    {cat.items.map((item, i) => {
-                      const opacity = 0.15 + (i % 4) * 0.1
-                      return (
-                        <span
-                          key={i}
-                          style={{
-                            display: 'inline-block',
-                            padding: '4px 12px',
-                            borderRadius: '16px',
-                            fontSize: '9px',
-                            fontWeight: 600,
-                            backgroundColor: `rgba(${r}, ${g}, ${b}, ${opacity})`,
-                            color: darkenColor(themeColor, 0.2),
-                          }}
-                        >
-                          {item}
-                        </span>
-                      )
-                    })}
-                  </div>
-                </div>
-              ))}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+                {allSkills.map((skill, i) => {
+                  const opacity = 0.15 + (i % 4) * 0.1
+                  return (
+                    <span
+                      key={i}
+                      style={{
+                        display: 'inline-block',
+                        padding: '4px 12px',
+                        borderRadius: '16px',
+                        fontSize: '9px',
+                        fontWeight: 600,
+                        backgroundColor: `rgba(${r}, ${g}, ${b}, ${opacity})`,
+                        color: darkenColor(themeColor, 0.2),
+                      }}
+                    >
+                      {skill}
+                    </span>
+                  )
+                })}
+              </div>
             </div>
           )
         })()}
 
         {/* Projects */}
-        {projects.length > 0 && (() => {
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (() => {
           const bg = getSectionBg()
           return (
             <div style={sectionStyle(bg)}>
@@ -381,7 +373,7 @@ export default function VibrantTemplate({ content, themeColor, fontFamily }: Tem
         })()}
 
         {/* Certifications */}
-        {certifications.length > 0 && (() => {
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (() => {
           const bg = getSectionBg()
           return (
             <div style={sectionStyle(bg)}>
@@ -430,7 +422,7 @@ export default function VibrantTemplate({ content, themeColor, fontFamily }: Tem
         })()}
 
         {/* Languages */}
-        {languages.length > 0 && (() => {
+        {languages.length > 0 && !isSectionHidden(content, 'languages') && (() => {
           const bg = getSectionBg()
           return (
             <div style={sectionStyle(bg)}>

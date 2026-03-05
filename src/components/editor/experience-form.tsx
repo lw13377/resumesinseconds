@@ -3,16 +3,20 @@
 import { useCallback } from 'react'
 import { Briefcase, Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
+import { AutocompleteInput } from '@/components/ui/autocomplete-input'
+import { SuggestionTextarea } from '@/components/ui/suggestion-textarea'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { useResume } from '@/hooks/use-resume'
+import { US_CITIES, JOB_TITLES, getDescriptionBullets } from '@/lib/suggestion-data'
 import type { Experience } from '@/types/resume'
 import { CollapsibleSection } from './collapsible-section'
 
 export function ExperienceForm() {
-  const { content, updateContent } = useResume()
+  const { content, updateContent, toggleSection } = useResume()
   const experiences = content.experience
+  const hidden = content.hiddenSections?.includes('experience') ?? false
 
   const addExperience = useCallback(() => {
     const newEntry: Experience = {
@@ -53,6 +57,9 @@ export function ExperienceForm() {
     <CollapsibleSection
       title="Work Experience"
       icon={<Briefcase className="h-4 w-4" />}
+      sectionKey="experience"
+      hidden={hidden}
+      onToggleVisibility={() => toggleSection('experience')}
     >
       {experiences.length === 0 ? (
         <div className="flex flex-col items-center rounded-lg border border-dashed py-8">
@@ -89,11 +96,12 @@ export function ExperienceForm() {
               <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div className="space-y-1.5">
                   <Label>Job Title</Label>
-                  <Input
+                  <AutocompleteInput
                     value={exp.title}
-                    onChange={(e) =>
-                      updateExperience(exp.id, 'title', e.target.value)
+                    onChange={(val) =>
+                      updateExperience(exp.id, 'title', val)
                     }
+                    suggestions={JOB_TITLES}
                     placeholder="Software Engineer"
                   />
                 </div>
@@ -109,11 +117,12 @@ export function ExperienceForm() {
                 </div>
                 <div className="space-y-1.5">
                   <Label>Location</Label>
-                  <Input
+                  <AutocompleteInput
                     value={exp.location}
-                    onChange={(e) =>
-                      updateExperience(exp.id, 'location', e.target.value)
+                    onChange={(val) =>
+                      updateExperience(exp.id, 'location', val)
                     }
+                    suggestions={US_CITIES}
                     placeholder="San Francisco, CA"
                   />
                 </div>
@@ -139,20 +148,39 @@ export function ExperienceForm() {
                       updateExperience(exp.id, 'endDate', e.target.value)
                     }
                     placeholder="Present"
+                    disabled={exp.endDate === 'Present'}
                   />
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id={`current-${exp.id}`}
+                      checked={exp.endDate === 'Present'}
+                      onCheckedChange={(checked) =>
+                        updateExperience(exp.id, 'endDate', checked ? 'Present' : '')
+                      }
+                    />
+                    <label
+                      htmlFor={`current-${exp.id}`}
+                      className="text-xs text-muted-foreground cursor-pointer"
+                    >
+                      Currently working here
+                    </label>
+                  </div>
                 </div>
               </div>
 
               {/* Row 3: Description */}
               <div className="space-y-1.5">
                 <Label>Description</Label>
-                <Textarea
+                <SuggestionTextarea
                   value={exp.description}
-                  onChange={(e) =>
-                    updateExperience(exp.id, 'description', e.target.value)
+                  onChange={(val) =>
+                    updateExperience(exp.id, 'description', val)
                   }
+                  suggestions={getDescriptionBullets(exp.title)}
                   placeholder="Describe your responsibilities, achievements, and impact..."
-                  className="min-h-[80px] resize-y"
+                  className="min-h-[80px]"
+                  mode="append"
+                  label="Suggested bullet points"
                 />
               </div>
             </div>

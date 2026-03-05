@@ -1,18 +1,20 @@
 'use client'
 
-import { useCallback } from 'react'
-import { FolderOpen, Plus, Trash2 } from 'lucide-react'
+import { useCallback, useMemo } from 'react'
+import { FolderOpen, Lightbulb, Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useResume } from '@/hooks/use-resume'
+import { getTechSuggestionsFromSkills } from '@/lib/suggestion-data'
 import type { Project } from '@/types/resume'
 import { CollapsibleSection } from './collapsible-section'
 
 export function ProjectsForm() {
-  const { content, updateContent } = useResume()
+  const { content, updateContent, toggleSection } = useResume()
   const projects = content.projects
+  const hidden = content.hiddenSections?.includes('projects') ?? false
 
   const addProject = useCallback(() => {
     const newEntry: Project = {
@@ -56,10 +58,23 @@ export function ProjectsForm() {
     [updateProject]
   )
 
+  // Get tech suggestions based on skills already entered
+  const allSkills = useMemo(
+    () => content.skills.flatMap((s) => s.items),
+    [content.skills]
+  )
+  const techSuggestions = useMemo(
+    () => getTechSuggestionsFromSkills(allSkills),
+    [allSkills]
+  )
+
   return (
     <CollapsibleSection
       title="Projects"
       icon={<FolderOpen className="h-4 w-4" />}
+      sectionKey="projects"
+      hidden={hidden}
+      onToggleVisibility={() => toggleSection('projects')}
     >
       {projects.length === 0 ? (
         <div className="flex flex-col items-center rounded-lg border border-dashed py-8">
@@ -139,6 +154,26 @@ export function ProjectsForm() {
                   }
                   placeholder="React, TypeScript, Node.js"
                 />
+                {techSuggestions.length > 0 && (
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    {techSuggestions
+                      .filter((t) => !project.technologies.some((pt) => pt.toLowerCase() === t.toLowerCase()))
+                      .slice(0, 8)
+                      .map((tech) => (
+                        <button
+                          key={tech}
+                          type="button"
+                          onClick={() =>
+                            updateProject(project.id, 'technologies', [...project.technologies, tech])
+                          }
+                          className="inline-flex items-center gap-0.5 rounded-full border bg-background px-2 py-0.5 text-[10px] font-medium transition-colors hover:bg-accent"
+                        >
+                          <Plus className="h-2.5 w-2.5" />
+                          {tech}
+                        </button>
+                      ))}
+                  </div>
+                )}
               </div>
             </div>
           ))}

@@ -1,9 +1,10 @@
 import React from 'react'
 import type { TemplateProps } from '@/components/templates/base-styles'
-import { pageContainerStyle } from '@/components/templates/base-styles'
+import { pageContainerStyle, isSectionHidden } from '@/components/templates/base-styles'
 
 export default function CleanTemplate({ content, themeColor, fontFamily }: TemplateProps) {
   const { personal, summary, experience, education, skills, projects, certifications, languages } = content
+  const allSkills = skills.flatMap(s => s.items)
 
   const contactParts: string[] = []
   if (personal.email) contactParts.push(personal.email)
@@ -69,7 +70,7 @@ export default function CleanTemplate({ content, themeColor, fontFamily }: Templ
       <hr style={dividerStyle} />
 
       {/* Summary */}
-      {summary && (
+      {summary && !isSectionHidden(content, 'summary') && (
         <div>
           <h2 style={sectionHeadingStyle}>Summary</h2>
           <p style={{ margin: '0', color: '#444', lineHeight: 1.6 }}>{summary}</p>
@@ -78,7 +79,7 @@ export default function CleanTemplate({ content, themeColor, fontFamily }: Templ
       )}
 
       {/* Experience */}
-      {experience.length > 0 && (
+      {experience.length > 0 && !isSectionHidden(content, 'experience') && (
         <div>
           <h2 style={sectionHeadingStyle}>Experience</h2>
           {experience.map((exp, i) => (
@@ -108,7 +109,7 @@ export default function CleanTemplate({ content, themeColor, fontFamily }: Templ
       )}
 
       {/* Education */}
-      {education.length > 0 && (
+      {education.length > 0 && !isSectionHidden(content, 'education') && (
         <div>
           <h2 style={sectionHeadingStyle}>Education</h2>
           {education.map((edu, i) => (
@@ -136,23 +137,18 @@ export default function CleanTemplate({ content, themeColor, fontFamily }: Templ
       )}
 
       {/* Skills */}
-      {skills.length > 0 && (
+      {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
         <div>
           <h2 style={sectionHeadingStyle}>Skills</h2>
-          {skills.map((cat) => (
-            <div key={cat.id} style={{ marginBottom: '4px' }}>
-              {cat.category && (
-                <span style={{ fontWeight: 600, color: '#1a1a1a' }}>{cat.category}: </span>
-              )}
-              <span style={{ color: '#444' }}>{cat.items.join(', ')}</span>
-            </div>
-          ))}
+          <div style={{ color: '#444' }}>
+            {allSkills.join(', ')}
+          </div>
           <hr style={{ ...dividerStyle, marginTop: '14px' }} />
         </div>
       )}
 
       {/* Projects */}
-      {projects.length > 0 && (
+      {projects.length > 0 && !isSectionHidden(content, 'projects') && (
         <div>
           <h2 style={sectionHeadingStyle}>Projects</h2>
           {projects.map((proj, i) => (
@@ -178,7 +174,7 @@ export default function CleanTemplate({ content, themeColor, fontFamily }: Templ
       )}
 
       {/* Certifications */}
-      {certifications.length > 0 && (
+      {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
         <div>
           <h2 style={sectionHeadingStyle}>Certifications</h2>
           {certifications.map((cert) => (
@@ -193,7 +189,7 @@ export default function CleanTemplate({ content, themeColor, fontFamily }: Templ
       )}
 
       {/* Languages */}
-      {languages.length > 0 && (
+      {languages.length > 0 && !isSectionHidden(content, 'languages') && (
         <div>
           <h2 style={sectionHeadingStyle}>Languages</h2>
           <div style={{ color: '#444' }}>

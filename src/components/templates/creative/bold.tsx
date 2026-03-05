@@ -1,9 +1,10 @@
 import React from 'react'
 import type { TemplateProps } from '@/components/templates/base-styles'
-import { hexToRgb, lightenColor, darkenColor, pageContainerStyle } from '@/components/templates/base-styles'
+import { hexToRgb, lightenColor, darkenColor, pageContainerStyle, isSectionHidden } from '@/components/templates/base-styles'
 
 export default function BoldTemplate({ content, themeColor, fontFamily }: TemplateProps) {
   const { personal, summary, experience, education, skills, projects, certifications, languages } = content
+  const allSkills = skills.flatMap(s => s.items)
 
   const { r, g, b } = hexToRgb(themeColor)
   const lightTint = lightenColor(themeColor, 0.88)
@@ -119,7 +120,7 @@ export default function BoldTemplate({ content, themeColor, fontFamily }: Templa
       {/* Body */}
       <div style={{ padding: '0 44px 28px 44px', position: 'relative' }}>
         {/* Summary */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div>
             {sectionHeading('Profile')}
             <p
@@ -137,7 +138,7 @@ export default function BoldTemplate({ content, themeColor, fontFamily }: Templa
         )}
 
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div>
             {sectionHeading('Experience')}
             {experience.map((exp) => (
@@ -207,7 +208,7 @@ export default function BoldTemplate({ content, themeColor, fontFamily }: Templa
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div>
             {sectionHeading('Education')}
             {education.map((edu) => (
@@ -259,50 +260,32 @@ export default function BoldTemplate({ content, themeColor, fontFamily }: Templa
         )}
 
         {/* Skills */}
-        {skills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div>
             {sectionHeading('Skills')}
-            {skills.map((cat) => (
-              <div key={cat.id} style={{ marginBottom: '10px' }}>
-                {cat.category && (
-                  <div
-                    style={{
-                      fontWeight: 900,
-                      fontSize: '11px',
-                      color: darkenColor(themeColor, 0.1),
-                      marginBottom: '6px',
-                      textTransform: 'uppercase' as const,
-                      letterSpacing: '1px',
-                    }}
-                  >
-                    {cat.category}
-                  </div>
-                )}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
-                  {cat.items.map((item, i) => (
-                    <span
-                      key={i}
-                      style={{
-                        display: 'inline-block',
-                        padding: '5px 14px',
-                        fontSize: '10px',
-                        fontWeight: 700,
-                        color: themeColor,
-                        backgroundColor: lightTint,
-                        borderLeft: `3px solid ${themeColor}`,
-                      }}
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+              {allSkills.map((skill, i) => (
+                <span
+                  key={i}
+                  style={{
+                    display: 'inline-block',
+                    padding: '5px 14px',
+                    fontSize: '10px',
+                    fontWeight: 700,
+                    color: themeColor,
+                    backgroundColor: lightTint,
+                    borderLeft: `3px solid ${themeColor}`,
+                  }}
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
           </div>
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div>
             {sectionHeading('Projects')}
             {projects.map((proj) => (
@@ -357,7 +340,7 @@ export default function BoldTemplate({ content, themeColor, fontFamily }: Templa
         )}
 
         {/* Certifications */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
           <div>
             {sectionHeading('Certifications')}
             {certifications.map((cert) => (
@@ -386,7 +369,7 @@ export default function BoldTemplate({ content, themeColor, fontFamily }: Templa
         )}
 
         {/* Languages */}
-        {languages.length > 0 && (
+        {languages.length > 0 && !isSectionHidden(content, 'languages') && (
           <div>
             {sectionHeading('Languages')}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>

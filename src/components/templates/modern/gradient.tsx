@@ -1,9 +1,10 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { hexToRgb, lightenColor, pageContainerStyle } from '../base-styles'
+import { hexToRgb, lightenColor, pageContainerStyle, isSectionHidden } from '../base-styles'
 
 export default function GradientTemplate({ content, themeColor, fontFamily }: TemplateProps) {
   const { personal, summary, experience, education, skills, projects, certifications, languages } = content
+  const allSkills = skills.flatMap(s => s.items)
   const rgb = hexToRgb(themeColor)
   const gradientFrom = themeColor
   const gradientTo = lightenColor(themeColor, 0.35)
@@ -100,7 +101,7 @@ export default function GradientTemplate({ content, themeColor, fontFamily }: Te
         )}
 
         {/* Summary overlay on gradient */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div
             style={{
               marginTop: '16px',
@@ -120,7 +121,7 @@ export default function GradientTemplate({ content, themeColor, fontFamily }: Te
       {/* Body content */}
       <div style={{ padding: '4px 40px 36px 40px' }}>
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div>
             <h2 style={sectionHeadingStyle}>Experience</h2>
             <div style={gradientUnderline} />
@@ -154,7 +155,7 @@ export default function GradientTemplate({ content, themeColor, fontFamily }: Te
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div>
             <h2 style={sectionHeadingStyle}>Education</h2>
             <div style={gradientUnderline} />
@@ -186,29 +187,20 @@ export default function GradientTemplate({ content, themeColor, fontFamily }: Te
         )}
 
         {/* Skills - tag cloud */}
-        {skills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div>
             <h2 style={sectionHeadingStyle}>Skills</h2>
             <div style={gradientUnderline} />
-            {skills.map((cat) => (
-              <div key={cat.id} style={{ marginBottom: '8px' }}>
-                {cat.category && (
-                  <div style={{ fontWeight: 600, fontSize: '10px', color: '#333', marginBottom: '4px' }}>
-                    {cat.category}
-                  </div>
-                )}
-                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                  {cat.items.map((item, i) => (
-                    <span key={i} style={tagStyle}>{item}</span>
-                  ))}
-                </div>
-              </div>
-            ))}
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+              {allSkills.map((skill, i) => (
+                <span key={i} style={tagStyle}>{skill}</span>
+              ))}
+            </div>
           </div>
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div>
             <h2 style={sectionHeadingStyle}>Projects</h2>
             <div style={gradientUnderline} />
@@ -241,7 +233,7 @@ export default function GradientTemplate({ content, themeColor, fontFamily }: Te
         {/* Certifications & Languages side by side */}
         {(certifications.length > 0 || languages.length > 0) && (
           <div style={{ display: 'flex', gap: '30px' }}>
-            {certifications.length > 0 && (
+            {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
               <div style={{ flex: languages.length > 0 ? '1 1 55%' : '1 1 100%' }}>
                 <h2 style={sectionHeadingStyle}>Certifications</h2>
                 <div style={gradientUnderline} />
@@ -256,7 +248,7 @@ export default function GradientTemplate({ content, themeColor, fontFamily }: Te
                 ))}
               </div>
             )}
-            {languages.length > 0 && (
+            {languages.length > 0 && !isSectionHidden(content, 'languages') && (
               <div style={{ flex: certifications.length > 0 ? '1 1 45%' : '1 1 100%' }}>
                 <h2 style={sectionHeadingStyle}>Languages</h2>
                 <div style={gradientUnderline} />

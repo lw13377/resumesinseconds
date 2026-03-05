@@ -1,9 +1,10 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { hexToRgb, lightenColor, pageContainerStyle } from '../base-styles'
+import { hexToRgb, lightenColor, pageContainerStyle, isSectionHidden } from '../base-styles'
 
 export default function GridTemplate({ content, themeColor, fontFamily }: TemplateProps) {
   const { personal, summary, experience, education, skills, projects, certifications, languages } = content
+  const allSkills = skills.flatMap(s => s.items)
   const rgb = hexToRgb(themeColor)
 
   const sectionHeadingStyle: React.CSSProperties = {
@@ -114,7 +115,7 @@ export default function GridTemplate({ content, themeColor, fontFamily }: Templa
       {/* Body */}
       <div style={{ padding: '16px 36px 32px 36px' }}>
         {/* Summary */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div style={{ marginBottom: '14px' }}>
             <div
               style={{
@@ -130,7 +131,7 @@ export default function GridTemplate({ content, themeColor, fontFamily }: Templa
         )}
 
         {/* Experience as cards */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div style={{ marginBottom: '6px' }}>
             <h2 style={sectionHeadingStyle}>Experience</h2>
             {experience.map((exp) => (
@@ -160,7 +161,7 @@ export default function GridTemplate({ content, themeColor, fontFamily }: Templa
         )}
 
         {/* Education as cards */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div style={{ marginBottom: '6px' }}>
             <h2 style={sectionHeadingStyle}>Education</h2>
             {education.map((edu) => (
@@ -188,30 +189,21 @@ export default function GridTemplate({ content, themeColor, fontFamily }: Templa
         )}
 
         {/* Skills as chip grid */}
-        {skills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div style={{ marginBottom: '6px' }}>
             <h2 style={sectionHeadingStyle}>Skills</h2>
             <div style={cardStyle}>
-              {skills.map((cat) => (
-                <div key={cat.id} style={{ marginBottom: '8px' }}>
-                  {cat.category && (
-                    <div style={{ fontWeight: 600, fontSize: '9.5px', color: '#333', marginBottom: '4px' }}>
-                      {cat.category}
-                    </div>
-                  )}
-                  <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                    {cat.items.map((item, i) => (
-                      <span key={i} style={chipStyle}>{item}</span>
-                    ))}
-                  </div>
-                </div>
-              ))}
+              <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                {allSkills.map((skill, i) => (
+                  <span key={i} style={chipStyle}>{skill}</span>
+                ))}
+              </div>
             </div>
           </div>
         )}
 
         {/* Projects as cards */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div style={{ marginBottom: '6px' }}>
             <h2 style={sectionHeadingStyle}>Projects</h2>
             {projects.map((proj) => (
@@ -246,7 +238,7 @@ export default function GridTemplate({ content, themeColor, fontFamily }: Templa
               gap: '16px',
             }}
           >
-            {certifications.length > 0 && (
+            {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
               <div>
                 <h2 style={sectionHeadingStyle}>Certifications</h2>
                 <div style={cardStyle}>
@@ -264,7 +256,7 @@ export default function GridTemplate({ content, themeColor, fontFamily }: Templa
                 </div>
               </div>
             )}
-            {languages.length > 0 && (
+            {languages.length > 0 && !isSectionHidden(content, 'languages') && (
               <div>
                 <h2 style={sectionHeadingStyle}>Languages</h2>
                 <div style={cardStyle}>

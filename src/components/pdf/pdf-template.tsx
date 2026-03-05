@@ -9,6 +9,10 @@ import {
 } from '@react-pdf/renderer'
 import type { ResumeContent } from '@/types/resume'
 
+function isHidden(content: ResumeContent, section: string): boolean {
+  return content.hiddenSections?.includes(section) ?? false
+}
+
 // Register a web-safe font
 Font.register({
   family: 'Helvetica',
@@ -126,7 +130,7 @@ export function PdfResumeDocument({ content, themeColor }: PdfTemplateProps) {
         <View style={styles.hr} />
 
         {/* Summary */}
-        {summary ? (
+        {summary && !isHidden(content, 'summary') ? (
           <View>
             <Text style={styles.sectionHeading}>Professional Summary</Text>
             <Text style={styles.text}>{summary}</Text>
@@ -134,7 +138,7 @@ export function PdfResumeDocument({ content, themeColor }: PdfTemplateProps) {
         ) : null}
 
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isHidden(content, 'experience') && (
           <View>
             <Text style={styles.sectionHeading}>Experience</Text>
             {experience.map((exp) => (
@@ -165,7 +169,7 @@ export function PdfResumeDocument({ content, themeColor }: PdfTemplateProps) {
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isHidden(content, 'education') && (
           <View>
             <Text style={styles.sectionHeading}>Education</Text>
             {education.map((edu) => (
@@ -196,26 +200,17 @@ export function PdfResumeDocument({ content, themeColor }: PdfTemplateProps) {
         )}
 
         {/* Skills */}
-        {skills.length > 0 && (
+        {skills.flatMap(s => s.items).length > 0 && !isHidden(content, 'skills') && (
           <View>
             <Text style={styles.sectionHeading}>Skills</Text>
-            {skills.map((cat) => (
-              <View key={cat.id} style={styles.skillRow}>
-                {cat.category ? (
-                  <Text>
-                    <Text style={styles.skillCategory}>{cat.category}: </Text>
-                    <Text style={styles.text}>{cat.items.join(', ')}</Text>
-                  </Text>
-                ) : (
-                  <Text style={styles.text}>{cat.items.join(', ')}</Text>
-                )}
-              </View>
-            ))}
+            <View style={styles.skillRow}>
+              <Text style={styles.text}>{skills.flatMap(s => s.items).join(', ')}</Text>
+            </View>
           </View>
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isHidden(content, 'projects') && (
           <View>
             <Text style={styles.sectionHeading}>Projects</Text>
             {projects.map((proj) => (
@@ -238,7 +233,7 @@ export function PdfResumeDocument({ content, themeColor }: PdfTemplateProps) {
         )}
 
         {/* Certifications */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isHidden(content, 'certifications') && (
           <View>
             <Text style={styles.sectionHeading}>Certifications</Text>
             {certifications.map((cert) => (
@@ -254,7 +249,7 @@ export function PdfResumeDocument({ content, themeColor }: PdfTemplateProps) {
         )}
 
         {/* Languages */}
-        {languages.length > 0 && (
+        {languages.length > 0 && !isHidden(content, 'languages') && (
           <View>
             <Text style={styles.sectionHeading}>Languages</Text>
             <View style={styles.inline}>

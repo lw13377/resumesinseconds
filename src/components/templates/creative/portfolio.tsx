@@ -1,9 +1,10 @@
 import React from 'react'
 import type { TemplateProps } from '@/components/templates/base-styles'
-import { hexToRgb, lightenColor, darkenColor, pageContainerStyle } from '@/components/templates/base-styles'
+import { hexToRgb, lightenColor, darkenColor, pageContainerStyle, isSectionHidden } from '@/components/templates/base-styles'
 
 export default function PortfolioTemplate({ content, themeColor, fontFamily }: TemplateProps) {
   const { personal, summary, experience, education, skills, projects, certifications, languages } = content
+  const allSkills = skills.flatMap(s => s.items)
 
   const { r, g, b } = hexToRgb(themeColor)
   const lightTint = lightenColor(themeColor, 0.92)
@@ -147,7 +148,7 @@ export default function PortfolioTemplate({ content, themeColor, fontFamily }: T
         }}
       >
         {/* Summary Card - full width */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div style={{ ...cardStyle, width: '100%', boxSizing: 'border-box' }}>
             <h2 style={cardTitleStyle}>
               <div style={titleBarStyle} />
@@ -160,7 +161,7 @@ export default function PortfolioTemplate({ content, themeColor, fontFamily }: T
         )}
 
         {/* Experience Card - full width */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div style={{ ...cardStyle, width: '100%', boxSizing: 'border-box' }}>
             <h2 style={cardTitleStyle}>
               <div style={titleBarStyle} />
@@ -200,7 +201,7 @@ export default function PortfolioTemplate({ content, themeColor, fontFamily }: T
         )}
 
         {/* Projects Card - full width, prominent */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div
             style={{
               ...cardStyle,
@@ -278,7 +279,7 @@ export default function PortfolioTemplate({ content, themeColor, fontFamily }: T
         )}
 
         {/* Education Card - half width */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div
             style={{
               ...cardStyle,
@@ -314,7 +315,7 @@ export default function PortfolioTemplate({ content, themeColor, fontFamily }: T
         )}
 
         {/* Skills Card - half width */}
-        {skills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div
             style={{
               ...cardStyle,
@@ -327,48 +328,30 @@ export default function PortfolioTemplate({ content, themeColor, fontFamily }: T
               <div style={titleBarStyle} />
               Skills
             </h2>
-            {skills.map((cat) => (
-              <div key={cat.id} style={{ marginBottom: '8px' }}>
-                {cat.category && (
-                  <div
-                    style={{
-                      fontWeight: 700,
-                      fontSize: '9px',
-                      color: darkAccent,
-                      marginBottom: '4px',
-                      textTransform: 'uppercase' as const,
-                      letterSpacing: '0.5px',
-                    }}
-                  >
-                    {cat.category}
-                  </div>
-                )}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                  {cat.items.map((item, i) => (
-                    <span
-                      key={i}
-                      style={{
-                        display: 'inline-block',
-                        padding: '3px 9px',
-                        borderRadius: '12px',
-                        fontSize: '8.5px',
-                        fontWeight: 600,
-                        backgroundColor: lightTint,
-                        color: darkAccent,
-                        border: `1px solid ${medTint}`,
-                      }}
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+              {allSkills.map((skill, i) => (
+                <span
+                  key={i}
+                  style={{
+                    display: 'inline-block',
+                    padding: '3px 9px',
+                    borderRadius: '12px',
+                    fontSize: '8.5px',
+                    fontWeight: 600,
+                    backgroundColor: lightTint,
+                    color: darkAccent,
+                    border: `1px solid ${medTint}`,
+                  }}
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
           </div>
         )}
 
         {/* Certifications Card */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
           <div
             style={{
               ...cardStyle,
@@ -404,7 +387,7 @@ export default function PortfolioTemplate({ content, themeColor, fontFamily }: T
         )}
 
         {/* Languages Card */}
-        {languages.length > 0 && (
+        {languages.length > 0 && !isSectionHidden(content, 'languages') && (
           <div
             style={{
               ...cardStyle,

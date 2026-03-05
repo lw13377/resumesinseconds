@@ -29,6 +29,11 @@ export function darkenColor(hex: string, amount: number): string {
   return `rgb(${darken(r)}, ${darken(g)}, ${darken(b)})`
 }
 
+/** Check if a section is hidden */
+export function isSectionHidden(content: ResumeContent, section: string): boolean {
+  return content.hiddenSections?.includes(section) ?? false
+}
+
 /** Page dimensions for A4-proportioned rendering (595 x 842 px) */
 export const PAGE_WIDTH = 595
 export const PAGE_HEIGHT = 842

@@ -1,9 +1,10 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { pageContainerStyle } from '../base-styles'
+import { pageContainerStyle, isSectionHidden } from '../base-styles'
 
 export default function FormalTemplate({ content, themeColor, fontFamily }: TemplateProps) {
   const { personal, summary, experience, education, skills, projects, certifications, languages } = content
+  const allSkills = skills.flatMap(s => s.items)
 
   const contactParts: string[] = []
   if (personal.email) contactParts.push(personal.email)
@@ -123,7 +124,7 @@ export default function FormalTemplate({ content, themeColor, fontFamily }: Temp
       </div>
 
       {/* Summary */}
-      {summary && (
+      {summary && !isSectionHidden(content, 'summary') && (
         <div>
           <div style={sectionHeadingStyle}>
             <div style={ornamentalLineStyle} />
@@ -145,7 +146,7 @@ export default function FormalTemplate({ content, themeColor, fontFamily }: Temp
       )}
 
       {/* Experience */}
-      {experience.length > 0 && (
+      {experience.length > 0 && !isSectionHidden(content, 'experience') && (
         <div>
           <div style={sectionHeadingStyle}>
             <div style={ornamentalLineStyle} />
@@ -190,7 +191,7 @@ export default function FormalTemplate({ content, themeColor, fontFamily }: Temp
       )}
 
       {/* Education */}
-      {education.length > 0 && (
+      {education.length > 0 && !isSectionHidden(content, 'education') && (
         <div>
           <div style={sectionHeadingStyle}>
             <div style={ornamentalLineStyle} />
@@ -220,28 +221,21 @@ export default function FormalTemplate({ content, themeColor, fontFamily }: Temp
       )}
 
       {/* Skills */}
-      {skills.length > 0 && (
+      {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
         <div>
           <div style={sectionHeadingStyle}>
             <div style={ornamentalLineStyle} />
             <span>Skills</span>
             <div style={ornamentalLineStyle} />
           </div>
-          {skills.map((cat) => (
-            <div key={cat.id} style={{ marginBottom: '5px', textAlign: 'center' as const }}>
-              {cat.category && (
-                <span style={{ fontWeight: 700, color: '#1a1a1a', fontSize: '10.5px' }}>
-                  {cat.category}:{' '}
-                </span>
-              )}
-              <span style={{ color: '#333' }}>{cat.items.join(', ')}</span>
-            </div>
-          ))}
+          <div style={{ textAlign: 'center' as const, color: '#333' }}>
+            {allSkills.join(', ')}
+          </div>
         </div>
       )}
 
       {/* Projects */}
-      {projects.length > 0 && (
+      {projects.length > 0 && !isSectionHidden(content, 'projects') && (
         <div>
           <div style={sectionHeadingStyle}>
             <div style={ornamentalLineStyle} />
@@ -281,7 +275,7 @@ export default function FormalTemplate({ content, themeColor, fontFamily }: Temp
       )}
 
       {/* Certifications */}
-      {certifications.length > 0 && (
+      {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
         <div>
           <div style={sectionHeadingStyle}>
             <div style={ornamentalLineStyle} />
@@ -299,7 +293,7 @@ export default function FormalTemplate({ content, themeColor, fontFamily }: Temp
       )}
 
       {/* Languages */}
-      {languages.length > 0 && (
+      {languages.length > 0 && !isSectionHidden(content, 'languages') && (
         <div>
           <div style={sectionHeadingStyle}>
             <div style={ornamentalLineStyle} />
