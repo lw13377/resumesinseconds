@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FileText } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { ContactForm } from "@/components/contact-form";
 
 const footerLinks = {
   product: {
@@ -15,7 +16,7 @@ const footerLinks = {
     title: "Company",
     links: [
       { label: "About", href: "/about" },
-      { label: "Contact", href: "mailto:contact@resumesinseconds.com" },
+      { label: "Contact", href: "#contact" },
     ],
   },
   legal: {
@@ -52,12 +53,20 @@ export function Footer() {
               <ul className="mt-3 space-y-2.5">
                 {section.links.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      {link.label}
-                    </Link>
+                    {link.href === '#contact' ? (
+                      <ContactForm>
+                        <button className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                          {link.label}
+                        </button>
+                      </ContactForm>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
