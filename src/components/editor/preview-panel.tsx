@@ -218,12 +218,14 @@ export function PreviewPanel() {
           }}
           className="relative shadow-xl"
         >
-          <TemplateRenderer
-            templateId={templateId}
-            content={content}
-            themeColor={themeColor}
-            fontFamily={fontFamily}
-          />
+          <div id="resume-capture-target">
+            <TemplateRenderer
+              templateId={templateId}
+              content={content}
+              themeColor={themeColor}
+              fontFamily={fontFamily}
+            />
+          </div>
           {/* Watermark for non-subscribers */}
           {!isSubscribed && (
             <div

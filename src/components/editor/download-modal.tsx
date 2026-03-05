@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { AlertTriangle, Download, Loader2, CreditCard, Sparkles, UserPlus } from 'lucide-react'
+import { Download, Loader2, CreditCard, Sparkles, UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -22,7 +22,7 @@ interface DownloadModalProps {
 }
 
 export function DownloadModal({ open, onOpenChange }: DownloadModalProps) {
-  const { id, title, hasUnsavedChanges, mode } = useResume()
+  const { title, mode } = useResume()
   const [downloading, setDownloading] = useState(false)
   const [subscribing, setSubscribing] = useState(false)
   const [activating, setActivating] = useState(false)
@@ -39,21 +39,59 @@ export function DownloadModal({ open, onOpenChange }: DownloadModalProps) {
   async function downloadPdf() {
     setDownloading(true)
     try {
-      const res = await fetch(`/api/resume/download?id=${id}`)
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || 'Download failed')
-      }
+      const { default: html2canvas } = await import('html2canvas-pro')
+      const { jsPDF } = await import('jspdf')
 
-      const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `${title || 'resume'}.pdf`
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
+      const element = document.getElementById('resume-capture-target')
+      if (!element) throw new Error('Preview not found')
+
+      // Clone the element and render off-screen at full A4 size
+      const clone = element.cloneNode(true) as HTMLElement
+      clone.style.position = 'fixed'
+      clone.style.left = '-9999px'
+      clone.style.top = '0'
+      clone.style.width = '595px'
+      clone.style.minHeight = '842px'
+      clone.style.transform = 'none'
+      clone.style.opacity = '1'
+      clone.style.filter = 'none'
+      document.body.appendChild(clone)
+
+      try {
+        const canvas = await html2canvas(clone, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff',
+        })
+
+        const pdf = new jsPDF('p', 'pt', 'a4')
+        const pdfWidth = pdf.internal.pageSize.getWidth()
+        const pdfHeight = pdf.internal.pageSize.getHeight()
+
+        const imgWidth = canvas.width / 2 // account for scale: 2
+        const imgHeight = canvas.height / 2
+        const ratio = pdfWidth / imgWidth
+        const scaledHeight = imgHeight * ratio
+
+        const imgData = canvas.toDataURL('image/png')
+
+        if (scaledHeight <= pdfHeight) {
+          // Fits on one page
+          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, scaledHeight)
+        } else {
+          // Multi-page: tile the image across pages
+          let position = 0
+          while (position < scaledHeight) {
+            if (position > 0) pdf.addPage()
+            pdf.addImage(imgData, 'PNG', 0, -position, pdfWidth, scaledHeight)
+            position += pdfHeight
+          }
+        }
+
+        pdf.save(`${title || 'resume'}.pdf`)
+      } finally {
+        document.body.removeChild(clone)
+      }
 
       toast.success('PDF downloaded successfully!')
       onOpenChange(false)
@@ -161,12 +199,6 @@ export function DownloadModal({ open, onOpenChange }: DownloadModalProps) {
             </DialogDescription>
           </DialogHeader>
 
-          {hasUnsavedChanges && (
-            <div className="flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-700 dark:bg-amber-950/30 dark:text-amber-300">
-              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-              Save your resume first to include latest edits.
-            </div>
-          )}
 
           <Button
             className="w-full"
@@ -201,12 +233,6 @@ export function DownloadModal({ open, onOpenChange }: DownloadModalProps) {
         </DialogHeader>
 
         <div className="space-y-4 pt-2">
-          {hasUnsavedChanges && (
-            <div className="flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-700 dark:bg-amber-950/30 dark:text-amber-300">
-              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-              Save your resume first to include latest edits.
-            </div>
-          )}
 
           {/* Pricing Card */}
           <div className="rounded-lg border bg-muted/30 p-4">
