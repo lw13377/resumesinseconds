@@ -12,7 +12,8 @@ import { CollapsibleSection } from './collapsible-section'
 const MAX_CHARS = 2000
 
 export function SummaryForm() {
-  const { content, updateContent } = useResume()
+  const { content, updateContent, toggleSection } = useResume()
+  const hidden = content.hiddenSections?.includes('summary') ?? false
   const summary = content.summary
   const [dismissed, setDismissed] = useState(false)
 
@@ -39,6 +40,9 @@ export function SummaryForm() {
       title="Professional Summary"
       icon={<AlignLeft className="h-4 w-4" />}
       defaultOpen
+      sectionKey="summary"
+      hidden={hidden}
+      onToggleVisibility={() => toggleSection('summary')}
     >
       {/* Auto-summary banner */}
       {showBanner && (

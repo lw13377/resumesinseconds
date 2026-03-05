@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { pageContainerStyle, hexToRgb, lightenColor } from '../base-styles'
+import { pageContainerStyle, hexToRgb, lightenColor, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function CollageTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -106,7 +106,7 @@ export default function CollageTemplate({ content, themeColor, fontFamily }: Tem
       {/* Body - collage of cards */}
       <div style={{ padding: '4px 36px 24px' }}>
         {/* Summary card */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div style={cardStyle(1, veryLightBg)}>
             <div style={tapeDecor(-8, '30px')} />
             <h2 style={sectionHeadingStyle}>About Me</h2>
@@ -115,7 +115,7 @@ export default function CollageTemplate({ content, themeColor, fontFamily }: Tem
         )}
 
         {/* Experience cards */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div style={cardStyle(2)}>
             <div style={tapeDecor(5, '40px')} />
             <h2 style={sectionHeadingStyle}>Experience</h2>
@@ -157,7 +157,7 @@ export default function CollageTemplate({ content, themeColor, fontFamily }: Tem
         {/* Two small side-by-side cards */}
         <div style={{ display: 'flex', gap: '12px' }}>
           {/* Education card */}
-          {education.length > 0 && (
+          {education.length > 0 && !isSectionHidden(content, 'education') && (
             <div style={{ ...cardStyle(3, lightenColor(themeColor, 0.94)), flex: 1 }}>
               <div style={tapeDecor(-12, '15px')} />
               <h2 style={sectionHeadingStyle}>Education</h2>
@@ -184,7 +184,7 @@ export default function CollageTemplate({ content, themeColor, fontFamily }: Tem
           )}
 
           {/* Skills card - sticky note style */}
-          {allSkills.length > 0 && (
+          {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
             <div
               style={{
                 ...cardStyle(4, `rgba(${r}, ${g}, ${b}, 0.08)`),
@@ -218,7 +218,7 @@ export default function CollageTemplate({ content, themeColor, fontFamily }: Tem
         </div>
 
         {/* Projects card */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div style={cardStyle(5)}>
             <div style={tapeDecor(-6, '50px')} />
             <h2 style={sectionHeadingStyle}>Projects</h2>
@@ -256,7 +256,7 @@ export default function CollageTemplate({ content, themeColor, fontFamily }: Tem
         {/* Bottom row: two small cards */}
         <div style={{ display: 'flex', gap: '12px' }}>
           {/* Certifications card */}
-          {certifications.length > 0 && (
+          {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
             <div style={{ ...cardStyle(6, '#ffffff'), flex: 1 }}>
               <div style={tapeDecor(4, '20px')} />
               <h2 style={sectionHeadingStyle}>Certifications</h2>
@@ -271,7 +271,7 @@ export default function CollageTemplate({ content, themeColor, fontFamily }: Tem
           )}
 
           {/* Languages card */}
-          {languages.length > 0 && (
+          {languages.length > 0 && !isSectionHidden(content, 'languages') && (
             <div style={{ ...cardStyle(7, lightBg), flex: 1 }}>
               <div style={tapeDecor(-10, '30px')} />
               <h2 style={sectionHeadingStyle}>Languages</h2>

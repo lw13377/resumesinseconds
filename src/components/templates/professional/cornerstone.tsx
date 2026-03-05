@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { pageContainerStyle } from '../base-styles'
+import { pageContainerStyle, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function CornerstoneTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -133,7 +133,7 @@ export default function CornerstoneTemplate({ content, themeColor, fontFamily }:
         <div style={dividerStyle} />
 
         {/* Summary */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div>
             <h2 style={sectionHeadingStyle}>Profile</h2>
             <p style={{ margin: '0', color: '#333', lineHeight: 1.6 }}>{summary}</p>
@@ -141,7 +141,7 @@ export default function CornerstoneTemplate({ content, themeColor, fontFamily }:
         )}
 
         {/* Experience + Education in a structured layout */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div>
             <h2 style={sectionHeadingStyle}>Professional Experience</h2>
             {experience.map((exp) => (
@@ -181,7 +181,7 @@ export default function CornerstoneTemplate({ content, themeColor, fontFamily }:
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div>
             <h2 style={sectionHeadingStyle}>Education</h2>
             {education.map((edu) => (
@@ -219,7 +219,7 @@ export default function CornerstoneTemplate({ content, themeColor, fontFamily }:
         )}
 
         {/* Skills */}
-        {allSkills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div>
             <h2 style={sectionHeadingStyle}>Skills</h2>
             <div style={{ color: '#333', lineHeight: 1.6 }}>
@@ -229,7 +229,7 @@ export default function CornerstoneTemplate({ content, themeColor, fontFamily }:
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div>
             <h2 style={sectionHeadingStyle}>Projects</h2>
             {projects.map((proj) => (
@@ -260,7 +260,7 @@ export default function CornerstoneTemplate({ content, themeColor, fontFamily }:
         )}
 
         {/* Certifications */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
           <div>
             <h2 style={sectionHeadingStyle}>Certifications</h2>
             {certifications.map((cert) => (
@@ -278,7 +278,7 @@ export default function CornerstoneTemplate({ content, themeColor, fontFamily }:
         )}
 
         {/* Languages */}
-        {languages.length > 0 && (
+        {languages.length > 0 && !isSectionHidden(content, 'languages') && (
           <div>
             <h2 style={sectionHeadingStyle}>Languages</h2>
             <div style={{ marginTop: '6px', color: '#333' }}>

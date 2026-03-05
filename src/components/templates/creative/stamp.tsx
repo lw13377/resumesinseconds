@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { pageContainerStyle, hexToRgb, lightenColor } from '../base-styles'
+import { pageContainerStyle, hexToRgb, lightenColor, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function StampTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -163,7 +163,7 @@ export default function StampTemplate({ content, themeColor, fontFamily }: Templ
       {/* Body */}
       <div style={{ padding: '8px 36px 24px' }}>
         {/* Summary */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div style={stampBorderStyle}>
             <div style={perforatedEdge} />
             <h2 style={sectionHeadingStyle}>
@@ -175,7 +175,7 @@ export default function StampTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div style={stampBorderStyle}>
             <div style={perforatedEdge} />
             <h2 style={sectionHeadingStyle}>
@@ -228,7 +228,7 @@ export default function StampTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div style={stampBorderStyle}>
             <div style={perforatedEdge} />
             <h2 style={sectionHeadingStyle}>
@@ -266,7 +266,7 @@ export default function StampTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Skills */}
-        {allSkills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div style={stampBorderStyle}>
             <div style={perforatedEdge} />
             <h2 style={sectionHeadingStyle}>
@@ -296,7 +296,7 @@ export default function StampTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div style={stampBorderStyle}>
             <div style={perforatedEdge} />
             <h2 style={sectionHeadingStyle}>
@@ -327,7 +327,7 @@ export default function StampTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Certifications */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
           <div style={stampBorderStyle}>
             <div style={perforatedEdge} />
             <h2 style={sectionHeadingStyle}>
@@ -348,7 +348,7 @@ export default function StampTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Languages */}
-        {languages.length > 0 && (
+        {languages.length > 0 && !isSectionHidden(content, 'languages') && (
           <div style={stampBorderStyle}>
             <div style={perforatedEdge} />
             <h2 style={sectionHeadingStyle}>

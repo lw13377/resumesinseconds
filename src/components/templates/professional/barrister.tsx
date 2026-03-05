@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { pageContainerStyle } from '../base-styles'
+import { pageContainerStyle, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function BarristerTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -77,7 +77,7 @@ export default function BarristerTemplate({ content, themeColor, fontFamily }: T
       <hr style={{ ...thickRuleStyle, marginTop: '14px' }} />
 
       {/* Summary */}
-      {summary && (
+      {summary && !isSectionHidden(content, 'summary') && (
         <div>
           <h2 style={sectionHeadingStyle}>Professional Summary</h2>
           <hr style={ruleStyle} />
@@ -95,7 +95,7 @@ export default function BarristerTemplate({ content, themeColor, fontFamily }: T
       )}
 
       {/* Experience */}
-      {experience.length > 0 && (
+      {experience.length > 0 && !isSectionHidden(content, 'experience') && (
         <div>
           <h2 style={sectionHeadingStyle}>Experience</h2>
           <hr style={ruleStyle} />
@@ -150,7 +150,7 @@ export default function BarristerTemplate({ content, themeColor, fontFamily }: T
       )}
 
       {/* Education */}
-      {education.length > 0 && (
+      {education.length > 0 && !isSectionHidden(content, 'education') && (
         <div>
           <h2 style={sectionHeadingStyle}>Education</h2>
           <hr style={ruleStyle} />
@@ -197,7 +197,7 @@ export default function BarristerTemplate({ content, themeColor, fontFamily }: T
       )}
 
       {/* Skills */}
-      {allSkills.length > 0 && (
+      {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
         <div>
           <h2 style={sectionHeadingStyle}>Areas of Expertise</h2>
           <hr style={ruleStyle} />
@@ -208,7 +208,7 @@ export default function BarristerTemplate({ content, themeColor, fontFamily }: T
       )}
 
       {/* Projects */}
-      {projects.length > 0 && (
+      {projects.length > 0 && !isSectionHidden(content, 'projects') && (
         <div>
           <h2 style={sectionHeadingStyle}>Notable Projects</h2>
           <hr style={ruleStyle} />
@@ -240,7 +240,7 @@ export default function BarristerTemplate({ content, themeColor, fontFamily }: T
       )}
 
       {/* Certifications */}
-      {certifications.length > 0 && (
+      {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
         <div>
           <h2 style={sectionHeadingStyle}>Certifications &amp; Licenses</h2>
           <hr style={ruleStyle} />
@@ -259,7 +259,7 @@ export default function BarristerTemplate({ content, themeColor, fontFamily }: T
       )}
 
       {/* Languages */}
-      {languages.length > 0 && (
+      {languages.length > 0 && !isSectionHidden(content, 'languages') && (
         <div>
           <h2 style={sectionHeadingStyle}>Languages</h2>
           <hr style={ruleStyle} />

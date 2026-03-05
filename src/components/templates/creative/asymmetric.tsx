@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '@/components/templates/base-styles'
-import { hexToRgb, lightenColor, darkenColor, pageContainerStyle, PAGE_HEIGHT } from '@/components/templates/base-styles'
+import { hexToRgb, lightenColor, darkenColor, pageContainerStyle, PAGE_HEIGHT, isSectionHidden } from '@/components/templates/base-styles'
 
 export default function AsymmetricTemplate({ content, themeColor, fontFamily }: TemplateProps) {
   const { personal, summary, experience, education, skills, projects, certifications, languages } = content
@@ -149,7 +149,7 @@ export default function AsymmetricTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Skills on left */}
-        {allSkills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div>
             {leftSectionHeading('Skills')}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
@@ -172,7 +172,7 @@ export default function AsymmetricTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Languages on left */}
-        {languages.length > 0 && (
+        {languages.length > 0 && !isSectionHidden(content, 'languages') && (
           <div>
             {leftSectionHeading('Languages')}
             {languages.map((lang) => (
@@ -189,7 +189,7 @@ export default function AsymmetricTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Certifications on left */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
           <div>
             {leftSectionHeading('Certifications')}
             {certifications.map((cert) => (
@@ -220,7 +220,7 @@ export default function AsymmetricTemplate({ content, themeColor, fontFamily }: 
         }}
       >
         {/* Summary */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div>
             {rightSectionHeading('Profile')}
             <p
@@ -239,7 +239,7 @@ export default function AsymmetricTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div>
             {rightSectionHeading('Experience')}
             {experience.map((exp, idx) => (
@@ -283,7 +283,7 @@ export default function AsymmetricTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div>
             {rightSectionHeading('Education')}
             {education.map((edu, idx) => (
@@ -317,7 +317,7 @@ export default function AsymmetricTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div>
             {rightSectionHeading('Projects')}
             {projects.map((proj, idx) => (

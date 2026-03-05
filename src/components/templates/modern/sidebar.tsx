@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { lightenColor, pageContainerStyle, PAGE_HEIGHT } from '../base-styles'
+import { lightenColor, pageContainerStyle, PAGE_HEIGHT, isSectionHidden } from '../base-styles'
 
 export default function SidebarTemplate({ content, themeColor, fontFamily }: TemplateProps) {
   const { personal, summary, experience, education, skills, projects, certifications, languages } = content
@@ -129,7 +129,7 @@ export default function SidebarTemplate({ content, themeColor, fontFamily }: Tem
         )}
 
         {/* Skills on sidebar */}
-        {allSkills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div>
             <h2 style={sidebarSectionTitle}>Skills</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
@@ -153,7 +153,7 @@ export default function SidebarTemplate({ content, themeColor, fontFamily }: Tem
         )}
 
         {/* Languages on sidebar */}
-        {languages.length > 0 && (
+        {languages.length > 0 && !isSectionHidden(content, 'languages') && (
           <div>
             <h2 style={sidebarSectionTitle}>Languages</h2>
             {languages.map((lang) => (
@@ -170,7 +170,7 @@ export default function SidebarTemplate({ content, themeColor, fontFamily }: Tem
         )}
 
         {/* Certifications on sidebar */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
           <div>
             <h2 style={sidebarSectionTitle}>Certifications</h2>
             {certifications.map((cert) => (
@@ -197,7 +197,7 @@ export default function SidebarTemplate({ content, themeColor, fontFamily }: Tem
         }}
       >
         {/* Summary */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div>
             <h2 style={{ ...mainSectionTitle, marginTop: '0' }}>About Me</h2>
             <p style={{ margin: 0, color: '#444', lineHeight: 1.65, fontSize: '10px' }}>{summary}</p>
@@ -205,7 +205,7 @@ export default function SidebarTemplate({ content, themeColor, fontFamily }: Tem
         )}
 
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div>
             <h2 style={mainSectionTitle}>Experience</h2>
             {experience.map((exp) => (
@@ -235,7 +235,7 @@ export default function SidebarTemplate({ content, themeColor, fontFamily }: Tem
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div>
             <h2 style={mainSectionTitle}>Education</h2>
             {education.map((edu) => (
@@ -263,7 +263,7 @@ export default function SidebarTemplate({ content, themeColor, fontFamily }: Tem
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div>
             <h2 style={mainSectionTitle}>Projects</h2>
             {projects.map((proj) => (

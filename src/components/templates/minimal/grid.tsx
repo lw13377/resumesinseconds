@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { pageContainerStyle } from '../base-styles'
+import { pageContainerStyle, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function GridTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -82,7 +82,7 @@ export default function GridTemplate({ content, themeColor, fontFamily }: Templa
       <div style={{ borderTop: `1px solid ${themeColor}`, marginBottom: '20px', opacity: 0.3 }} />
 
       {/* Summary */}
-      {summary && (
+      {summary && !isSectionHidden(content, 'summary') && (
         <div style={rowStyle}>
           <div style={labelStyle}>Summary</div>
           <div style={contentColStyle}>
@@ -92,7 +92,7 @@ export default function GridTemplate({ content, themeColor, fontFamily }: Templa
       )}
 
       {/* Experience */}
-      {experience.length > 0 && (
+      {experience.length > 0 && !isSectionHidden(content, 'experience') && (
         <div style={rowStyle}>
           <div style={labelStyle}>Experience</div>
           <div style={contentColStyle}>
@@ -123,7 +123,7 @@ export default function GridTemplate({ content, themeColor, fontFamily }: Templa
       )}
 
       {/* Education */}
-      {education.length > 0 && (
+      {education.length > 0 && !isSectionHidden(content, 'education') && (
         <div style={rowStyle}>
           <div style={labelStyle}>Education</div>
           <div style={contentColStyle}>
@@ -152,7 +152,7 @@ export default function GridTemplate({ content, themeColor, fontFamily }: Templa
       )}
 
       {/* Skills */}
-      {allSkills.length > 0 && (
+      {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
         <div style={rowStyle}>
           <div style={labelStyle}>Skills</div>
           <div style={contentColStyle}>
@@ -162,7 +162,7 @@ export default function GridTemplate({ content, themeColor, fontFamily }: Templa
       )}
 
       {/* Projects */}
-      {projects.length > 0 && (
+      {projects.length > 0 && !isSectionHidden(content, 'projects') && (
         <div style={rowStyle}>
           <div style={labelStyle}>Projects</div>
           <div style={contentColStyle}>
@@ -189,7 +189,7 @@ export default function GridTemplate({ content, themeColor, fontFamily }: Templa
       )}
 
       {/* Certifications */}
-      {certifications.length > 0 && (
+      {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
         <div style={rowStyle}>
           <div style={labelStyle}>Certifications</div>
           <div style={contentColStyle}>
@@ -205,7 +205,7 @@ export default function GridTemplate({ content, themeColor, fontFamily }: Templa
       )}
 
       {/* Languages */}
-      {languages.length > 0 && (
+      {languages.length > 0 && !isSectionHidden(content, 'languages') && (
         <div style={rowStyle}>
           <div style={labelStyle}>Languages</div>
           <div style={contentColStyle}>

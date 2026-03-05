@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { pageContainerStyle, lightenColor } from '../base-styles'
+import { pageContainerStyle, lightenColor, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function MagazineTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -72,7 +72,7 @@ export default function MagazineTemplate({ content, themeColor, fontFamily }: Te
       {/* Body */}
       <div style={{ padding: '20px 40px 28px' }}>
         {/* Summary with drop cap and multi-column feel */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div style={{ marginBottom: '6px' }}>
             <h2 style={sectionHeadingStyle}>Profile</h2>
             <div style={{ position: 'relative' }}>
@@ -102,7 +102,7 @@ export default function MagazineTemplate({ content, themeColor, fontFamily }: Te
         )}
 
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div>
             <h2 style={sectionHeadingStyle}>Experience</h2>
             {experience.map((exp, idx) => (
@@ -156,7 +156,7 @@ export default function MagazineTemplate({ content, themeColor, fontFamily }: Te
         {/* Two-column layout for Education + Skills */}
         <div style={{ display: 'flex', gap: '24px' }}>
           {/* Education column */}
-          {education.length > 0 && (
+          {education.length > 0 && !isSectionHidden(content, 'education') && (
             <div style={{ flex: 1 }}>
               <h2 style={sectionHeadingStyle}>Education</h2>
               {education.map((edu) => (
@@ -184,7 +184,7 @@ export default function MagazineTemplate({ content, themeColor, fontFamily }: Te
           )}
 
           {/* Skills column */}
-          {allSkills.length > 0 && (
+          {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
             <div style={{ flex: 1 }}>
               <h2 style={sectionHeadingStyle}>Skills</h2>
               <div style={{ columnCount: 2, columnGap: '12px' }}>
@@ -202,7 +202,7 @@ export default function MagazineTemplate({ content, themeColor, fontFamily }: Te
         <div style={thinRule} />
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div>
             <h2 style={sectionHeadingStyle}>Projects</h2>
             {projects.map((proj) => (
@@ -227,7 +227,7 @@ export default function MagazineTemplate({ content, themeColor, fontFamily }: Te
 
         {/* Bottom row: Certifications + Languages */}
         <div style={{ display: 'flex', gap: '24px' }}>
-          {certifications.length > 0 && (
+          {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
             <div style={{ flex: 1 }}>
               <h2 style={sectionHeadingStyle}>Certifications</h2>
               {certifications.map((cert) => (
@@ -240,7 +240,7 @@ export default function MagazineTemplate({ content, themeColor, fontFamily }: Te
             </div>
           )}
 
-          {languages.length > 0 && (
+          {languages.length > 0 && !isSectionHidden(content, 'languages') && (
             <div style={{ flex: 1 }}>
               <h2 style={sectionHeadingStyle}>Languages</h2>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>

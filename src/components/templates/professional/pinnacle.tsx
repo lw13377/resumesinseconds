@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { pageContainerStyle, lightenColor } from '../base-styles'
+import { pageContainerStyle, lightenColor, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function PinnacleTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -96,7 +96,7 @@ export default function PinnacleTemplate({ content, themeColor, fontFamily }: Te
       </div>
 
       {/* Summary */}
-      {summary && (
+      {summary && !isSectionHidden(content, 'summary') && (
         <div>
           {sectionHeadingWithLines('Summary')}
           <p style={{ margin: '0', color: '#333', lineHeight: 1.65, textAlign: 'center' as const }}>
@@ -106,7 +106,7 @@ export default function PinnacleTemplate({ content, themeColor, fontFamily }: Te
       )}
 
       {/* Experience */}
-      {experience.length > 0 && (
+      {experience.length > 0 && !isSectionHidden(content, 'experience') && (
         <div>
           {sectionHeadingWithLines('Experience')}
           {experience.map((exp) => (
@@ -148,7 +148,7 @@ export default function PinnacleTemplate({ content, themeColor, fontFamily }: Te
       )}
 
       {/* Education */}
-      {education.length > 0 && (
+      {education.length > 0 && !isSectionHidden(content, 'education') && (
         <div>
           {sectionHeadingWithLines('Education')}
           {education.map((edu) => (
@@ -177,7 +177,7 @@ export default function PinnacleTemplate({ content, themeColor, fontFamily }: Te
       )}
 
       {/* Skills */}
-      {allSkills.length > 0 && (
+      {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
         <div>
           {sectionHeadingWithLines('Skills')}
           <div style={{ color: '#333', textAlign: 'center' as const, lineHeight: 1.6 }}>
@@ -187,7 +187,7 @@ export default function PinnacleTemplate({ content, themeColor, fontFamily }: Te
       )}
 
       {/* Projects */}
-      {projects.length > 0 && (
+      {projects.length > 0 && !isSectionHidden(content, 'projects') && (
         <div>
           {sectionHeadingWithLines('Projects')}
           {projects.map((proj) => (
@@ -233,7 +233,7 @@ export default function PinnacleTemplate({ content, themeColor, fontFamily }: Te
       )}
 
       {/* Certifications */}
-      {certifications.length > 0 && (
+      {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
         <div>
           {sectionHeadingWithLines('Certifications')}
           {certifications.map((cert) => (
@@ -251,7 +251,7 @@ export default function PinnacleTemplate({ content, themeColor, fontFamily }: Te
       )}
 
       {/* Languages */}
-      {languages.length > 0 && (
+      {languages.length > 0 && !isSectionHidden(content, 'languages') && (
         <div>
           {sectionHeadingWithLines('Languages')}
           <div style={{ textAlign: 'center', color: '#333' }}>

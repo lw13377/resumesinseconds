@@ -10,8 +10,9 @@ import type { Certification } from '@/types/resume'
 import { CollapsibleSection } from './collapsible-section'
 
 export function CertificationsForm() {
-  const { content, updateContent } = useResume()
+  const { content, updateContent, toggleSection } = useResume()
   const certifications = content.certifications
+  const hidden = content.hiddenSections?.includes('certifications') ?? false
 
   const addCertification = useCallback(() => {
     const newEntry: Certification = {
@@ -49,6 +50,9 @@ export function CertificationsForm() {
     <CollapsibleSection
       title="Certifications"
       icon={<Award className="h-4 w-4" />}
+      sectionKey="certifications"
+      hidden={hidden}
+      onToggleVisibility={() => toggleSection('certifications')}
     >
       {certifications.length === 0 ? (
         <div className="flex flex-col items-center rounded-lg border border-dashed py-8">

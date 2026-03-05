@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '@/components/templates/base-styles'
-import { hexToRgb, lightenColor, darkenColor, pageContainerStyle } from '@/components/templates/base-styles'
+import { hexToRgb, lightenColor, darkenColor, pageContainerStyle, isSectionHidden } from '@/components/templates/base-styles'
 
 export default function ArtisticTemplate({ content, themeColor, fontFamily }: TemplateProps) {
   const { personal, summary, experience, education, skills, projects, certifications, languages } = content
@@ -210,7 +210,7 @@ export default function ArtisticTemplate({ content, themeColor, fontFamily }: Te
         )}
 
         {/* Summary */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div>
             {sectionMarker('About')}
             <p
@@ -230,7 +230,7 @@ export default function ArtisticTemplate({ content, themeColor, fontFamily }: Te
         )}
 
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div>
             {sectionMarker('Experience')}
             {experience.map((exp, idx) => (
@@ -269,7 +269,7 @@ export default function ArtisticTemplate({ content, themeColor, fontFamily }: Te
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div>
             {sectionMarker('Education')}
             {education.map((edu, idx) => (
@@ -306,7 +306,7 @@ export default function ArtisticTemplate({ content, themeColor, fontFamily }: Te
         )}
 
         {/* Skills — creative scattered layout */}
-        {allSkills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div>
             {sectionMarker('Skills')}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', alignItems: 'center' }}>
@@ -343,7 +343,7 @@ export default function ArtisticTemplate({ content, themeColor, fontFamily }: Te
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div>
             {sectionMarker('Projects')}
             {projects.map((proj) => (
@@ -382,7 +382,7 @@ export default function ArtisticTemplate({ content, themeColor, fontFamily }: Te
         )}
 
         {/* Certifications */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
           <div>
             {sectionMarker('Certifications')}
             {certifications.map((cert) => (
@@ -407,7 +407,7 @@ export default function ArtisticTemplate({ content, themeColor, fontFamily }: Te
         )}
 
         {/* Languages */}
-        {languages.length > 0 && (
+        {languages.length > 0 && !isSectionHidden(content, 'languages') && (
           <div>
             {sectionMarker('Languages')}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>

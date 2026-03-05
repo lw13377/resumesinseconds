@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { hexToRgb, lightenColor, pageContainerStyle } from '../base-styles'
+import { hexToRgb, lightenColor, pageContainerStyle, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function MosaicTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -124,7 +124,7 @@ export default function MosaicTemplate({ content, themeColor, fontFamily }: Temp
       </div>
 
       {/* Summary */}
-      {summary && (
+      {summary && !isSectionHidden(content, 'summary') && (
         <div style={sectionBlockStyle(sectionIndex++ % 2 === 0)}>
           <h2 style={sectionHeadingStyle}>
             <span style={dotDecoStyle} />
@@ -137,7 +137,7 @@ export default function MosaicTemplate({ content, themeColor, fontFamily }: Temp
       )}
 
       {/* Experience */}
-      {experience.length > 0 && (
+      {experience.length > 0 && !isSectionHidden(content, 'experience') && (
         <div style={sectionBlockStyle(sectionIndex++ % 2 === 0)}>
           <h2 style={sectionHeadingStyle}>
             <span style={dotDecoStyle} />
@@ -191,7 +191,7 @@ export default function MosaicTemplate({ content, themeColor, fontFamily }: Temp
       )}
 
       {/* Education */}
-      {education.length > 0 && (
+      {education.length > 0 && !isSectionHidden(content, 'education') && (
         <div style={sectionBlockStyle(sectionIndex++ % 2 === 0)}>
           <h2 style={sectionHeadingStyle}>
             <span style={dotDecoStyle} />
@@ -227,7 +227,7 @@ export default function MosaicTemplate({ content, themeColor, fontFamily }: Temp
       )}
 
       {/* Skills */}
-      {allSkills.length > 0 && (
+      {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
         <div style={sectionBlockStyle(sectionIndex++ % 2 === 0)}>
           <h2 style={sectionHeadingStyle}>
             <span style={dotDecoStyle} />
@@ -242,7 +242,7 @@ export default function MosaicTemplate({ content, themeColor, fontFamily }: Temp
       )}
 
       {/* Projects */}
-      {projects.length > 0 && (
+      {projects.length > 0 && !isSectionHidden(content, 'projects') && (
         <div style={sectionBlockStyle(sectionIndex++ % 2 === 0)}>
           <h2 style={sectionHeadingStyle}>
             <span style={dotDecoStyle} />
@@ -279,7 +279,7 @@ export default function MosaicTemplate({ content, themeColor, fontFamily }: Temp
       )}
 
       {/* Certifications */}
-      {certifications.length > 0 && (
+      {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
         <div style={sectionBlockStyle(sectionIndex++ % 2 === 0)}>
           <h2 style={sectionHeadingStyle}>
             <span style={dotDecoStyle} />
@@ -312,7 +312,7 @@ export default function MosaicTemplate({ content, themeColor, fontFamily }: Temp
       )}
 
       {/* Languages */}
-      {languages.length > 0 && (
+      {languages.length > 0 && !isSectionHidden(content, 'languages') && (
         <div style={sectionBlockStyle(sectionIndex++ % 2 === 0)}>
           <h2 style={sectionHeadingStyle}>
             <span style={dotDecoStyle} />

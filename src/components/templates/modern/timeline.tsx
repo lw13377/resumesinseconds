@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { lightenColor, pageContainerStyle } from '../base-styles'
+import { lightenColor, pageContainerStyle, isSectionHidden } from '../base-styles'
 
 export default function TimelineTemplate({ content, themeColor, fontFamily }: TemplateProps) {
   const { personal, summary, experience, education, skills, projects, certifications, languages } = content
@@ -113,14 +113,14 @@ export default function TimelineTemplate({ content, themeColor, fontFamily }: Te
       </div>
 
       {/* Summary */}
-      {summary && (
+      {summary && !isSectionHidden(content, 'summary') && (
         <div style={{ marginTop: '12px' }}>
           <p style={{ margin: 0, color: '#444', lineHeight: 1.65, fontSize: '10px', fontStyle: 'italic' }}>{summary}</p>
         </div>
       )}
 
       {/* Experience Timeline */}
-      {experience.length > 0 && (
+      {experience.length > 0 && !isSectionHidden(content, 'experience') && (
         <div>
           <h2 style={sectionHeadingStyle}>Experience</h2>
           <div style={{ position: 'relative' as const, paddingLeft: '24px' }}>
@@ -173,7 +173,7 @@ export default function TimelineTemplate({ content, themeColor, fontFamily }: Te
       )}
 
       {/* Education Timeline */}
-      {education.length > 0 && (
+      {education.length > 0 && !isSectionHidden(content, 'education') && (
         <div>
           <h2 style={sectionHeadingStyle}>Education</h2>
           <div style={{ position: 'relative' as const, paddingLeft: '24px' }}>
@@ -220,7 +220,7 @@ export default function TimelineTemplate({ content, themeColor, fontFamily }: Te
       )}
 
       {/* Skills grid of tags */}
-      {allSkills.length > 0 && (
+      {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
         <div>
           <h2 style={sectionHeadingStyle}>Skills</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -232,7 +232,7 @@ export default function TimelineTemplate({ content, themeColor, fontFamily }: Te
       )}
 
       {/* Projects */}
-      {projects.length > 0 && (
+      {projects.length > 0 && !isSectionHidden(content, 'projects') && (
         <div>
           <h2 style={sectionHeadingStyle}>Projects</h2>
           <div style={{ position: 'relative' as const, paddingLeft: '24px' }}>
@@ -278,7 +278,7 @@ export default function TimelineTemplate({ content, themeColor, fontFamily }: Te
       {/* Certifications & Languages */}
       {(certifications.length > 0 || languages.length > 0) && (
         <div style={{ display: 'flex', gap: '30px', marginTop: '4px' }}>
-          {certifications.length > 0 && (
+          {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
             <div style={{ flex: languages.length > 0 ? '1 1 55%' : '1 1 100%' }}>
               <h2 style={sectionHeadingStyle}>Certifications</h2>
               {certifications.map((cert) => (
@@ -294,7 +294,7 @@ export default function TimelineTemplate({ content, themeColor, fontFamily }: Te
               ))}
             </div>
           )}
-          {languages.length > 0 && (
+          {languages.length > 0 && !isSectionHidden(content, 'languages') && (
             <div style={{ flex: certifications.length > 0 ? '1 1 45%' : '1 1 100%' }}>
               <h2 style={sectionHeadingStyle}>Languages</h2>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>

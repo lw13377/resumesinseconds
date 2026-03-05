@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { lightenColor, pageContainerStyle } from '../base-styles'
+import { lightenColor, pageContainerStyle, isSectionHidden } from '../base-styles'
 
 export default function CorporateTemplate({ content, themeColor, fontFamily }: TemplateProps) {
   const { personal, summary, experience, education, skills, projects, certifications, languages } = content
@@ -72,7 +72,7 @@ export default function CorporateTemplate({ content, themeColor, fontFamily }: T
       {/* Body */}
       <div style={{ padding: '4px 40px 36px 40px' }}>
         {/* Summary */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div>
             <h2 style={sectionHeadingStyle}>Professional Summary</h2>
             <p
@@ -91,7 +91,7 @@ export default function CorporateTemplate({ content, themeColor, fontFamily }: T
         )}
 
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div>
             <h2 style={sectionHeadingStyle}>Professional Experience</h2>
             {experience.map((exp) => (
@@ -128,7 +128,7 @@ export default function CorporateTemplate({ content, themeColor, fontFamily }: T
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div>
             <h2 style={sectionHeadingStyle}>Education</h2>
             {education.map((edu) => (
@@ -156,7 +156,7 @@ export default function CorporateTemplate({ content, themeColor, fontFamily }: T
         )}
 
         {/* Skills & Languages - Two column layout */}
-        {(allSkills.length > 0 || languages.length > 0) && (
+        {((allSkills.length > 0 && !isSectionHidden(content, 'skills')) || (languages.length > 0 && !isSectionHidden(content, 'languages'))) && (
           <div
             style={{
               display: 'flex',
@@ -165,7 +165,7 @@ export default function CorporateTemplate({ content, themeColor, fontFamily }: T
             }}
           >
             {/* Skills column */}
-            {allSkills.length > 0 && (
+            {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
               <div style={{ flex: languages.length > 0 ? '1 1 60%' : '1 1 100%' }}>
                 <h2 style={sectionHeadingStyle}>Skills</h2>
                 <div style={{ color: '#333' }}>
@@ -175,7 +175,7 @@ export default function CorporateTemplate({ content, themeColor, fontFamily }: T
             )}
 
             {/* Languages column */}
-            {languages.length > 0 && (
+            {languages.length > 0 && !isSectionHidden(content, 'languages') && (
               <div style={{ flex: allSkills.length > 0 ? '1 1 40%' : '1 1 100%' }}>
                 <h2 style={sectionHeadingStyle}>Languages</h2>
                 {languages.map((lang) => (
@@ -194,7 +194,7 @@ export default function CorporateTemplate({ content, themeColor, fontFamily }: T
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div>
             <h2 style={sectionHeadingStyle}>Projects</h2>
             {projects.map((proj) => (
@@ -226,7 +226,7 @@ export default function CorporateTemplate({ content, themeColor, fontFamily }: T
         )}
 
         {/* Certifications */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
           <div>
             <h2 style={sectionHeadingStyle}>Certifications</h2>
             {certifications.map((cert) => (

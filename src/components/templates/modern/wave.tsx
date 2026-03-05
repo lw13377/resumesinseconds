@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { hexToRgb, lightenColor, pageContainerStyle } from '../base-styles'
+import { hexToRgb, lightenColor, pageContainerStyle, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function WaveTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -108,7 +108,7 @@ export default function WaveTemplate({ content, themeColor, fontFamily }: Templa
       {/* Body */}
       <div style={{ padding: '12px 44px 32px 44px' }}>
         {/* Summary */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div>
             <div style={waveDividerStyle} />
             <div style={{ textAlign: 'center' as const }}>
@@ -131,7 +131,7 @@ export default function WaveTemplate({ content, themeColor, fontFamily }: Templa
         )}
 
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div>
             <div style={invertedWaveDividerStyle} />
             <h2 style={sectionHeadingStyle}>Experience</h2>
@@ -176,7 +176,7 @@ export default function WaveTemplate({ content, themeColor, fontFamily }: Templa
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div>
             <div style={waveDividerStyle} />
             <h2 style={sectionHeadingStyle}>Education</h2>
@@ -212,7 +212,7 @@ export default function WaveTemplate({ content, themeColor, fontFamily }: Templa
         )}
 
         {/* Skills */}
-        {allSkills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div>
             <div style={invertedWaveDividerStyle} />
             <h2 style={{ ...sectionHeadingStyle, textAlign: 'center' as const }}>Skills</h2>
@@ -231,7 +231,7 @@ export default function WaveTemplate({ content, themeColor, fontFamily }: Templa
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div>
             <div style={waveDividerStyle} />
             <h2 style={sectionHeadingStyle}>Projects</h2>
@@ -266,7 +266,7 @@ export default function WaveTemplate({ content, themeColor, fontFamily }: Templa
         )}
 
         {/* Certifications */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
           <div>
             <div style={invertedWaveDividerStyle} />
             <h2 style={sectionHeadingStyle}>Certifications</h2>
@@ -304,7 +304,7 @@ export default function WaveTemplate({ content, themeColor, fontFamily }: Templa
         )}
 
         {/* Languages */}
-        {languages.length > 0 && (
+        {languages.length > 0 && !isSectionHidden(content, 'languages') && (
           <div>
             <div style={waveDividerStyle} />
             <h2 style={{ ...sectionHeadingStyle, textAlign: 'center' as const }}>Languages</h2>

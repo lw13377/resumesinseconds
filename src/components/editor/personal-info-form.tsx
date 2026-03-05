@@ -21,6 +21,19 @@ export function PersonalInfoForm() {
     [personal, updateContent]
   )
 
+  const handleLinkedInBlur = useCallback(() => {
+    const val = personal.linkedin.trim()
+    if (!val) return
+    // If user typed just a username like "johndoe", format it
+    if (!val.includes('/') && !val.includes('.') && !val.includes(':')) {
+      update('linkedin', `https://linkedin.com/in/${val}`)
+    } else if (val.startsWith('linkedin.com')) {
+      update('linkedin', `https://${val}`)
+    } else if (val.startsWith('www.linkedin.com')) {
+      update('linkedin', `https://${val}`)
+    }
+  }, [personal.linkedin, update])
+
   return (
     <CollapsibleSection
       title="Personal Information"
@@ -81,9 +94,9 @@ export function PersonalInfoForm() {
           <Label htmlFor="linkedin">LinkedIn URL</Label>
           <Input
             id="linkedin"
-            type="url"
             value={personal.linkedin}
             onChange={(e) => update('linkedin', e.target.value)}
+            onBlur={handleLinkedInBlur}
             placeholder="https://linkedin.com/in/johndoe"
           />
         </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { hexToRgb, lightenColor, pageContainerStyle } from '../base-styles'
+import { hexToRgb, lightenColor, pageContainerStyle, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function MetroTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -109,7 +109,7 @@ export default function MetroTemplate({ content, themeColor, fontFamily }: Templ
       {/* Body */}
       <div style={{ padding: '16px 28px 28px 28px' }}>
         {/* Summary Card */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div style={cardStyle}>
             <div style={cardHeaderStyle}>
               <div
@@ -130,7 +130,7 @@ export default function MetroTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Experience Card */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div style={cardStyle}>
             <div style={cardHeaderStyle}>
               <div
@@ -188,7 +188,7 @@ export default function MetroTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Education Card */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div style={cardStyle}>
             <div style={cardHeaderStyle}>
               <div
@@ -234,7 +234,7 @@ export default function MetroTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Skills Card */}
-        {allSkills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div style={cardStyle}>
             <div style={cardHeaderStyle}>
               <div
@@ -257,7 +257,7 @@ export default function MetroTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Projects Card */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div style={cardStyle}>
             <div style={cardHeaderStyle}>
               <div
@@ -304,7 +304,7 @@ export default function MetroTemplate({ content, themeColor, fontFamily }: Templ
         {/* Bottom row: Certifications and Languages side by side */}
         <div style={{ display: 'flex', gap: '12px' }}>
           {/* Certifications Card */}
-          {certifications.length > 0 && (
+          {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
             <div style={{ ...cardStyle, flex: languages.length > 0 ? 1 : '1 1 100%' }}>
               <div style={cardHeaderStyle}>
                 <div
@@ -333,7 +333,7 @@ export default function MetroTemplate({ content, themeColor, fontFamily }: Templ
           )}
 
           {/* Languages Card */}
-          {languages.length > 0 && (
+          {languages.length > 0 && !isSectionHidden(content, 'languages') && (
             <div style={{ ...cardStyle, flex: certifications.length > 0 ? 1 : '1 1 100%' }}>
               <div style={cardHeaderStyle}>
                 <div

@@ -7,13 +7,14 @@ import { Input } from '@/components/ui/input'
 import { AutocompleteInput } from '@/components/ui/autocomplete-input'
 import { Label } from '@/components/ui/label'
 import { useResume } from '@/hooks/use-resume'
-import { US_CITIES } from '@/lib/suggestion-data'
+import { US_CITIES, COMMON_DEGREES, COMMON_SCHOOLS } from '@/lib/suggestion-data'
 import type { Education } from '@/types/resume'
 import { CollapsibleSection } from './collapsible-section'
 
 export function EducationForm() {
-  const { content, updateContent } = useResume()
+  const { content, updateContent, toggleSection } = useResume()
   const educations = content.education
+  const hidden = content.hiddenSections?.includes('education') ?? false
 
   const addEducation = useCallback(() => {
     const newEntry: Education = {
@@ -54,6 +55,9 @@ export function EducationForm() {
     <CollapsibleSection
       title="Education"
       icon={<GraduationCap className="h-4 w-4" />}
+      sectionKey="education"
+      hidden={hidden}
+      onToggleVisibility={() => toggleSection('education')}
     >
       {educations.length === 0 ? (
         <div className="flex flex-col items-center rounded-lg border border-dashed py-8">
@@ -90,21 +94,23 @@ export function EducationForm() {
               <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div className="space-y-1.5">
                   <Label>Degree</Label>
-                  <Input
+                  <AutocompleteInput
                     value={edu.degree}
-                    onChange={(e) =>
-                      updateEducation(edu.id, 'degree', e.target.value)
+                    onChange={(val) =>
+                      updateEducation(edu.id, 'degree', val)
                     }
+                    suggestions={COMMON_DEGREES}
                     placeholder="B.S. Computer Science"
                   />
                 </div>
                 <div className="space-y-1.5">
                   <Label>School</Label>
-                  <Input
+                  <AutocompleteInput
                     value={edu.school}
-                    onChange={(e) =>
-                      updateEducation(edu.id, 'school', e.target.value)
+                    onChange={(val) =>
+                      updateEducation(edu.id, 'school', val)
                     }
+                    suggestions={COMMON_SCHOOLS}
                     placeholder="MIT"
                   />
                 </div>

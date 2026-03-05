@@ -27,7 +27,7 @@ export async function createResume(templateId: string = 'professional-classic') 
 
   const { data, error } = await supabase
     .from('resumes')
-    .insert({ user_id: user.id, content })
+    .insert({ user_id: user.id, template_id: templateId, content })
     .select()
     .single()
 

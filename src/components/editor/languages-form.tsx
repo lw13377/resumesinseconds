@@ -25,8 +25,9 @@ const PROFICIENCY_LEVELS = [
 ]
 
 export function LanguagesForm() {
-  const { content, updateContent } = useResume()
+  const { content, updateContent, toggleSection } = useResume()
   const languages = content.languages
+  const hidden = content.hiddenSections?.includes('languages') ?? false
 
   const addLanguage = useCallback(() => {
     const newEntry: Language = {
@@ -61,6 +62,9 @@ export function LanguagesForm() {
     <CollapsibleSection
       title="Languages"
       icon={<Globe className="h-4 w-4" />}
+      sectionKey="languages"
+      hidden={hidden}
+      onToggleVisibility={() => toggleSection('languages')}
     >
       {languages.length === 0 ? (
         <div className="flex flex-col items-center rounded-lg border border-dashed py-8">

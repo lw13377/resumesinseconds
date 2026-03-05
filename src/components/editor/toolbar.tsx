@@ -5,14 +5,11 @@ import Link from 'next/link'
 import {
   ArrowLeft,
   Check,
-  ChevronRight,
   CloudOff,
   Download,
-  LayoutGrid,
   Loader2,
 } from 'lucide-react'
 import { DownloadModal } from './download-modal'
-import { TemplateDrawer } from './template-drawer'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -28,7 +25,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useResume } from '@/hooks/use-resume'
-import { TEMPLATES } from '@/components/templates/template-registry'
 import { FONT_OPTIONS, COLOR_PRESETS } from '@/types/resume'
 import { cn } from '@/lib/utils'
 
@@ -63,7 +59,6 @@ function SaveIndicator({ status }: { status: string }) {
 export function Toolbar() {
   const {
     title,
-    templateId,
     themeColor,
     fontFamily,
     saveStatus,
@@ -73,9 +68,6 @@ export function Toolbar() {
   } = useResume()
 
   const [showDownload, setShowDownload] = useState(false)
-  const [showTemplates, setShowTemplates] = useState(false)
-
-  const currentTemplate = TEMPLATES.find((t) => t.id === templateId)
 
   return (
     <div className="border-b bg-background">
@@ -111,22 +103,8 @@ export function Toolbar() {
         <DownloadModal open={showDownload} onOpenChange={setShowDownload} />
       </div>
 
-      {/* Bottom row: template, font, color swatches */}
+      {/* Bottom row: font, color swatches */}
       <div className="flex flex-wrap items-center gap-2 border-t px-4 py-2">
-        {/* Template Picker Button */}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setShowTemplates(true)}
-          className="gap-1.5"
-        >
-          <LayoutGrid className="h-4 w-4" />
-          {currentTemplate?.name || 'Template'}
-          <ChevronRight className="h-3 w-3 text-muted-foreground" />
-        </Button>
-
-        <TemplateDrawer open={showTemplates} onOpenChange={setShowTemplates} />
-
         {/* Font Selector */}
         <Select value={fontFamily} onValueChange={setFontFamily}>
           <SelectTrigger size="sm" className="w-[160px]">

@@ -675,6 +675,147 @@ export const SUMMARY_TEMPLATES_BY_JOB: Record<string, string[]> = {
   ],
 }
 
+// ── Common Degrees ──────────────────────────────────────────────────────────
+
+export const COMMON_DEGREES: string[] = [
+  'B.S. Computer Science',
+  'B.S. Electrical Engineering',
+  'B.S. Mechanical Engineering',
+  'B.S. Information Technology',
+  'B.S. Mathematics',
+  'B.S. Biology',
+  'B.S. Chemistry',
+  'B.S. Physics',
+  'B.S. Business Administration',
+  'B.S. Nursing',
+  'B.A. English',
+  'B.A. Psychology',
+  'B.A. Communications',
+  'B.A. Political Science',
+  'B.A. Economics',
+  'B.A. History',
+  'B.A. Sociology',
+  'B.A. Graphic Design',
+  'B.A. Marketing',
+  'M.S. Computer Science',
+  'M.S. Data Science',
+  'M.S. Electrical Engineering',
+  'M.S. Mechanical Engineering',
+  'M.S. Information Systems',
+  'M.A. Education',
+  'M.A. English',
+  'M.A. Psychology',
+  'MBA',
+  'Ph.D. Computer Science',
+  'Ph.D. Physics',
+  'Ph.D. Chemistry',
+  'Ph.D. Biology',
+  'J.D.',
+  'M.D.',
+  'Associate of Science',
+  'Associate of Arts',
+]
+
+// ── Common Schools ──────────────────────────────────────────────────────────
+
+export const COMMON_SCHOOLS: string[] = [
+  'Massachusetts Institute of Technology',
+  'Stanford University',
+  'Harvard University',
+  'California Institute of Technology',
+  'University of Chicago',
+  'Princeton University',
+  'Columbia University',
+  'Yale University',
+  'University of Pennsylvania',
+  'Duke University',
+  'Northwestern University',
+  'Johns Hopkins University',
+  'Cornell University',
+  'Rice University',
+  'Vanderbilt University',
+  'University of Notre Dame',
+  'Washington University in St. Louis',
+  'Georgetown University',
+  'Carnegie Mellon University',
+  'University of Michigan',
+  'University of Virginia',
+  'Georgia Institute of Technology',
+  'University of California, Berkeley',
+  'University of California, Los Angeles',
+  'University of California, San Diego',
+  'University of Southern California',
+  'New York University',
+  'Boston University',
+  'University of Texas at Austin',
+  'University of Washington',
+  'University of Wisconsin-Madison',
+  'University of Illinois Urbana-Champaign',
+  'Purdue University',
+  'University of Florida',
+  'Penn State University',
+  'Ohio State University',
+  'University of Minnesota',
+  'University of Maryland',
+  'Texas A&M University',
+  'Arizona State University',
+  'University of Colorado Boulder',
+  'University of North Carolina at Chapel Hill',
+  'Virginia Tech',
+  'Michigan State University',
+  'Indiana University',
+  'University of Arizona',
+  'University of Oregon',
+  'Rutgers University',
+  'University of Iowa',
+  'University of Pittsburgh',
+]
+
+// ── Tech Suggestions from Skills ────────────────────────────────────────────
+
+const RELATED_TECH: Record<string, string[]> = {
+  react: ['Next.js', 'Redux', 'React Router', 'Zustand', 'TanStack Query'],
+  'next.js': ['Vercel', 'React', 'TypeScript', 'Tailwind CSS', 'Prisma'],
+  typescript: ['JavaScript', 'Node.js', 'ESLint', 'Zod'],
+  python: ['Django', 'Flask', 'FastAPI', 'Pandas', 'NumPy'],
+  'node.js': ['Express', 'NestJS', 'TypeScript', 'MongoDB', 'PostgreSQL'],
+  java: ['Spring Boot', 'Maven', 'Gradle', 'JUnit', 'Hibernate'],
+  docker: ['Kubernetes', 'Docker Compose', 'CI/CD', 'AWS ECS'],
+  aws: ['S3', 'EC2', 'Lambda', 'CloudFormation', 'DynamoDB'],
+  postgresql: ['SQL', 'Prisma', 'Sequelize', 'pgAdmin'],
+  mongodb: ['Mongoose', 'MongoDB Atlas', 'NoSQL'],
+  vue: ['Nuxt.js', 'Vuex', 'Pinia', 'Vue Router'],
+  angular: ['RxJS', 'NgRx', 'TypeScript', 'Jasmine'],
+  flutter: ['Dart', 'Firebase', 'iOS', 'Android'],
+  swift: ['SwiftUI', 'UIKit', 'Xcode', 'iOS', 'Core Data'],
+  kotlin: ['Android', 'Jetpack Compose', 'Ktor', 'Gradle'],
+  go: ['Gin', 'gRPC', 'Docker', 'Kubernetes'],
+  rust: ['Cargo', 'Tokio', 'WebAssembly', 'Actix'],
+  'c#': ['.NET', 'ASP.NET', 'Entity Framework', 'Azure', 'Unity'],
+  sql: ['PostgreSQL', 'MySQL', 'SQLite', 'Data Modeling'],
+  tailwind: ['CSS', 'PostCSS', 'Responsive Design', 'shadcn/ui'],
+  figma: ['Adobe XD', 'Sketch', 'Design Systems', 'Prototyping'],
+  git: ['GitHub', 'GitLab', 'CI/CD', 'Code Review'],
+}
+
+export function getTechSuggestionsFromSkills(skills: string[]): string[] {
+  const existing = new Set(skills.map((s) => s.toLowerCase()))
+  const suggestions = new Set<string>()
+
+  for (const skill of skills) {
+    const related = RELATED_TECH[skill.toLowerCase()]
+    if (related) {
+      for (const tech of related) {
+        if (!existing.has(tech.toLowerCase())) {
+          suggestions.add(tech)
+        }
+      }
+    }
+  }
+
+  return Array.from(suggestions)
+}
+
 // ── Year Estimation ──────────────────────────────────────────────────────────
 
 import type { Experience } from '@/types/resume'

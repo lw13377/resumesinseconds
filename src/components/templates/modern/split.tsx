@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { hexToRgb, lightenColor, darkenColor, pageContainerStyle } from '../base-styles'
+import { hexToRgb, lightenColor, darkenColor, pageContainerStyle, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function SplitTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -120,7 +120,7 @@ export default function SplitTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Skills */}
-        {allSkills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div>
             <h2 style={leftSectionHeadingStyle}>Skills</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -132,7 +132,7 @@ export default function SplitTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Languages */}
-        {languages.length > 0 && (
+        {languages.length > 0 && !isSectionHidden(content, 'languages') && (
           <div>
             <h2 style={leftSectionHeadingStyle}>Languages</h2>
             {languages.map((lang) => (
@@ -149,7 +149,7 @@ export default function SplitTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Certifications */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
           <div>
             <h2 style={leftSectionHeadingStyle}>Certifications</h2>
             {certifications.map((cert) => (
@@ -181,7 +181,7 @@ export default function SplitTemplate({ content, themeColor, fontFamily }: Templ
         }}
       >
         {/* Summary */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div>
             <h2 style={{ ...rightSectionHeadingStyle, marginTop: '0' }}>Summary</h2>
             <p style={{ margin: 0, color: '#444', lineHeight: 1.7, fontSize: '10px' }}>
@@ -191,7 +191,7 @@ export default function SplitTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div>
             <h2 style={rightSectionHeadingStyle}>Experience</h2>
             {experience.map((exp, idx) => (
@@ -242,7 +242,7 @@ export default function SplitTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div>
             <h2 style={rightSectionHeadingStyle}>Education</h2>
             {education.map((edu, idx) => (
@@ -275,7 +275,7 @@ export default function SplitTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div>
             <h2 style={rightSectionHeadingStyle}>Projects</h2>
             {projects.map((proj, idx) => (

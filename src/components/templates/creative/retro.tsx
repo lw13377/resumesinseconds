@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { pageContainerStyle, hexToRgb, lightenColor } from '../base-styles'
+import { pageContainerStyle, hexToRgb, lightenColor, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function RetroTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -132,7 +132,7 @@ export default function RetroTemplate({ content, themeColor, fontFamily }: Templ
       {/* Body */}
       <div style={{ padding: '20px 40px 28px' }}>
         {/* Summary */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div style={{ marginBottom: '4px' }}>
             <h2 style={sectionHeadingStyle}>About Me</h2>
             <p
@@ -154,7 +154,7 @@ export default function RetroTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div style={{ marginBottom: '4px' }}>
             <h2 style={sectionHeadingStyle}>Experience</h2>
             {experience.map((exp) => (
@@ -205,7 +205,7 @@ export default function RetroTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div style={{ marginBottom: '4px' }}>
             <h2 style={sectionHeadingStyle}>Education</h2>
             {education.map((edu) => (
@@ -241,7 +241,7 @@ export default function RetroTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Skills as retro rounded badges */}
-        {allSkills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div style={{ marginBottom: '4px' }}>
             <h2 style={sectionHeadingStyle}>Skills</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
@@ -271,7 +271,7 @@ export default function RetroTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div style={{ marginBottom: '4px' }}>
             <h2 style={sectionHeadingStyle}>Projects</h2>
             {projects.map((proj) => (
@@ -318,7 +318,7 @@ export default function RetroTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Certifications */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
           <div style={{ marginBottom: '4px' }}>
             <h2 style={sectionHeadingStyle}>Certifications</h2>
             {certifications.map((cert) => (
@@ -344,7 +344,7 @@ export default function RetroTemplate({ content, themeColor, fontFamily }: Templ
         )}
 
         {/* Languages */}
-        {languages.length > 0 && (
+        {languages.length > 0 && !isSectionHidden(content, 'languages') && (
           <div>
             <h2 style={sectionHeadingStyle}>Languages</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>

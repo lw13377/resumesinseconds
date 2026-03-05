@@ -63,6 +63,7 @@ export interface ResumeContent {
   projects: Project[]
   certifications: Certification[]
   languages: Language[]
+  hiddenSections?: string[]
 }
 
 export interface ResumeData {

@@ -9,7 +9,8 @@ import type { SkillCategory } from '@/types/resume'
 import { CollapsibleSection } from './collapsible-section'
 
 export function SkillsForm() {
-  const { content, updateContent } = useResume()
+  const { content, updateContent, toggleSection } = useResume()
+  const hidden = content.hiddenSections?.includes('skills') ?? false
   const [inputValue, setInputValue] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -92,6 +93,9 @@ export function SkillsForm() {
     <CollapsibleSection
       title="Skills"
       icon={<Wrench className="h-4 w-4" />}
+      sectionKey="skills"
+      hidden={hidden}
+      onToggleVisibility={() => toggleSection('skills')}
     >
       <div className="space-y-3">
         {/* Tag input area */}

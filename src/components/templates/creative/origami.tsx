@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { pageContainerStyle, hexToRgb, lightenColor } from '../base-styles'
+import { pageContainerStyle, hexToRgb, lightenColor, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function OrigamiTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -123,7 +123,7 @@ export default function OrigamiTemplate({ content, themeColor, fontFamily }: Tem
       {/* Body */}
       <div style={{ padding: '16px 40px 28px' }}>
         {/* Summary */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div style={{ marginBottom: '16px' }}>
             <h2 style={skewedHeadingStyle}>
               <span style={skewedHeadingTextStyle}>Summary</span>
@@ -133,7 +133,7 @@ export default function OrigamiTemplate({ content, themeColor, fontFamily }: Tem
         )}
 
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div style={{ marginBottom: '16px' }}>
             <h2 style={skewedHeadingStyle}>
               <span style={skewedHeadingTextStyle}>Experience</span>
@@ -187,7 +187,7 @@ export default function OrigamiTemplate({ content, themeColor, fontFamily }: Tem
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div style={{ marginBottom: '16px' }}>
             <h2 style={skewedHeadingStyle}>
               <span style={skewedHeadingTextStyle}>Education</span>
@@ -223,7 +223,7 @@ export default function OrigamiTemplate({ content, themeColor, fontFamily }: Tem
         )}
 
         {/* Skills with skewed pills */}
-        {allSkills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div style={{ marginBottom: '16px' }}>
             <h2 style={skewedHeadingStyle}>
               <span style={skewedHeadingTextStyle}>Skills</span>
@@ -250,7 +250,7 @@ export default function OrigamiTemplate({ content, themeColor, fontFamily }: Tem
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div style={{ marginBottom: '16px' }}>
             <h2 style={skewedHeadingStyle}>
               <span style={skewedHeadingTextStyle}>Projects</span>
@@ -279,7 +279,7 @@ export default function OrigamiTemplate({ content, themeColor, fontFamily }: Tem
         )}
 
         {/* Certifications */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
           <div style={{ marginBottom: '16px' }}>
             <h2 style={skewedHeadingStyle}>
               <span style={skewedHeadingTextStyle}>Certifications</span>
@@ -307,7 +307,7 @@ export default function OrigamiTemplate({ content, themeColor, fontFamily }: Tem
         )}
 
         {/* Languages */}
-        {languages.length > 0 && (
+        {languages.length > 0 && !isSectionHidden(content, 'languages') && (
           <div>
             <h2 style={skewedHeadingStyle}>
               <span style={skewedHeadingTextStyle}>Languages</span>

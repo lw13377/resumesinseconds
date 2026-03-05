@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { pageContainerStyle, hexToRgb, lightenColor } from '../base-styles'
+import { pageContainerStyle, hexToRgb, lightenColor, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function BlueprintTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -154,7 +154,7 @@ export default function BlueprintTemplate({ content, themeColor, fontFamily }: T
         {/* Body */}
         <div style={{ padding: '16px 40px 28px' }}>
           {/* Summary */}
-          {summary && (
+          {summary && !isSectionHidden(content, 'summary') && (
             <div style={{ marginBottom: '16px' }}>
               <h2 style={sectionHeadingStyle}>
                 <span style={{ ...monoStyle, fontSize: '9px', opacity: 0.5 }}>01</span>
@@ -165,7 +165,7 @@ export default function BlueprintTemplate({ content, themeColor, fontFamily }: T
           )}
 
           {/* Experience */}
-          {experience.length > 0 && (
+          {experience.length > 0 && !isSectionHidden(content, 'experience') && (
             <div style={{ marginBottom: '16px' }}>
               <h2 style={sectionHeadingStyle}>
                 <span style={{ ...monoStyle, fontSize: '9px', opacity: 0.5 }}>02</span>
@@ -210,7 +210,7 @@ export default function BlueprintTemplate({ content, themeColor, fontFamily }: T
           )}
 
           {/* Education */}
-          {education.length > 0 && (
+          {education.length > 0 && !isSectionHidden(content, 'education') && (
             <div style={{ marginBottom: '16px' }}>
               <h2 style={sectionHeadingStyle}>
                 <span style={{ ...monoStyle, fontSize: '9px', opacity: 0.5 }}>03</span>
@@ -250,7 +250,7 @@ export default function BlueprintTemplate({ content, themeColor, fontFamily }: T
           )}
 
           {/* Skills as monospace items */}
-          {allSkills.length > 0 && (
+          {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
             <div style={{ marginBottom: '16px' }}>
               <h2 style={sectionHeadingStyle}>
                 <span style={{ ...monoStyle, fontSize: '9px', opacity: 0.5 }}>04</span>
@@ -279,7 +279,7 @@ export default function BlueprintTemplate({ content, themeColor, fontFamily }: T
           )}
 
           {/* Projects */}
-          {projects.length > 0 && (
+          {projects.length > 0 && !isSectionHidden(content, 'projects') && (
             <div style={{ marginBottom: '16px' }}>
               <h2 style={sectionHeadingStyle}>
                 <span style={{ ...monoStyle, fontSize: '9px', opacity: 0.5 }}>05</span>
@@ -312,7 +312,7 @@ export default function BlueprintTemplate({ content, themeColor, fontFamily }: T
           )}
 
           {/* Certifications */}
-          {certifications.length > 0 && (
+          {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
             <div style={{ marginBottom: '16px' }}>
               <h2 style={sectionHeadingStyle}>
                 <span style={{ ...monoStyle, fontSize: '9px', opacity: 0.5 }}>06</span>
@@ -330,7 +330,7 @@ export default function BlueprintTemplate({ content, themeColor, fontFamily }: T
           )}
 
           {/* Languages */}
-          {languages.length > 0 && (
+          {languages.length > 0 && !isSectionHidden(content, 'languages') && (
             <div>
               <h2 style={sectionHeadingStyle}>
                 <span style={{ ...monoStyle, fontSize: '9px', opacity: 0.5 }}>07</span>

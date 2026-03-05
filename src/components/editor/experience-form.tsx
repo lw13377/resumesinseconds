@@ -3,6 +3,7 @@
 import { useCallback } from 'react'
 import { Briefcase, Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { AutocompleteInput } from '@/components/ui/autocomplete-input'
 import { SuggestionTextarea } from '@/components/ui/suggestion-textarea'
@@ -13,8 +14,9 @@ import type { Experience } from '@/types/resume'
 import { CollapsibleSection } from './collapsible-section'
 
 export function ExperienceForm() {
-  const { content, updateContent } = useResume()
+  const { content, updateContent, toggleSection } = useResume()
   const experiences = content.experience
+  const hidden = content.hiddenSections?.includes('experience') ?? false
 
   const addExperience = useCallback(() => {
     const newEntry: Experience = {
@@ -55,6 +57,9 @@ export function ExperienceForm() {
     <CollapsibleSection
       title="Work Experience"
       icon={<Briefcase className="h-4 w-4" />}
+      sectionKey="experience"
+      hidden={hidden}
+      onToggleVisibility={() => toggleSection('experience')}
     >
       {experiences.length === 0 ? (
         <div className="flex flex-col items-center rounded-lg border border-dashed py-8">
@@ -143,7 +148,23 @@ export function ExperienceForm() {
                       updateExperience(exp.id, 'endDate', e.target.value)
                     }
                     placeholder="Present"
+                    disabled={exp.endDate === 'Present'}
                   />
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id={`current-${exp.id}`}
+                      checked={exp.endDate === 'Present'}
+                      onCheckedChange={(checked) =>
+                        updateExperience(exp.id, 'endDate', checked ? 'Present' : '')
+                      }
+                    />
+                    <label
+                      htmlFor={`current-${exp.id}`}
+                      className="text-xs text-muted-foreground cursor-pointer"
+                    >
+                      Currently working here
+                    </label>
+                  </div>
                 </div>
               </div>
 

@@ -32,6 +32,7 @@ interface ResumeContextValue extends ResumeState {
   setThemeColor: (themeColor: string) => void
   setFontFamily: (fontFamily: string) => void
   setTitle: (title: string) => void
+  toggleSection: (sectionKey: string) => void
 }
 
 export const ResumeContext = createContext<ResumeContextValue | null>(null)
@@ -152,6 +153,24 @@ export function ResumeProvider({ children, initialData }: ResumeProviderProps) {
     [saveToSupabase]
   )
 
+  const toggleSection = useCallback(
+    (sectionKey: string) => {
+      setState((prev) => {
+        const hidden = prev.content.hiddenSections ?? []
+        const nextHidden = hidden.includes(sectionKey)
+          ? hidden.filter((k) => k !== sectionKey)
+          : [...hidden, sectionKey]
+        const next = {
+          ...prev,
+          content: { ...prev.content, hiddenSections: nextHidden },
+        }
+        saveToSupabase(next)
+        return next
+      })
+    },
+    [saveToSupabase]
+  )
+
   return (
     <ResumeContext.Provider
       value={{
@@ -162,6 +181,7 @@ export function ResumeProvider({ children, initialData }: ResumeProviderProps) {
         setThemeColor,
         setFontFamily,
         setTitle,
+        toggleSection,
       }}
     >
       {children}

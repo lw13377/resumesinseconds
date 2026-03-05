@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, type ReactNode } from 'react'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Eye, EyeOff } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface CollapsibleSectionProps {
@@ -9,6 +9,9 @@ interface CollapsibleSectionProps {
   icon: ReactNode
   children: ReactNode
   defaultOpen?: boolean
+  sectionKey?: string
+  hidden?: boolean
+  onToggleVisibility?: () => void
 }
 
 export function CollapsibleSection({
@@ -16,25 +19,49 @@ export function CollapsibleSection({
   icon,
   children,
   defaultOpen = false,
+  sectionKey,
+  hidden,
+  onToggleVisibility,
 }: CollapsibleSectionProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen)
 
   return (
-    <div className="rounded-lg border bg-card">
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center gap-2.5 px-4 py-3 text-left transition-colors hover:bg-accent/50"
-      >
-        <span className="text-muted-foreground">{icon}</span>
-        <span className="text-sm font-medium">{title}</span>
-        <ChevronDown
-          className={cn(
-            'ml-auto h-4 w-4 text-muted-foreground transition-transform duration-200',
-            isOpen && 'rotate-180'
+    <div className={cn('rounded-lg border bg-card', hidden && 'opacity-60')}>
+      <div className="flex items-center">
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex flex-1 items-center gap-2.5 px-4 py-3 text-left transition-colors hover:bg-accent/50"
+        >
+          <span className="text-muted-foreground">{icon}</span>
+          <span className="text-sm font-medium">{title}</span>
+          {hidden && (
+            <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+              Hidden
+            </span>
           )}
-        />
-      </button>
+          <ChevronDown
+            className={cn(
+              'ml-auto h-4 w-4 text-muted-foreground transition-transform duration-200',
+              isOpen && 'rotate-180'
+            )}
+          />
+        </button>
+        {sectionKey && onToggleVisibility && (
+          <button
+            type="button"
+            onClick={onToggleVisibility}
+            className="flex items-center justify-center px-3 py-3 text-muted-foreground transition-colors hover:text-foreground"
+            title={hidden ? 'Show in resume' : 'Hide from resume'}
+          >
+            {hidden ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
+          </button>
+        )}
+      </div>
       {isOpen && (
         <div className="border-t px-4 py-4">
           {children}

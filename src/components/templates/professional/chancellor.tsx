@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { pageContainerStyle, lightenColor } from '../base-styles'
+import { pageContainerStyle, lightenColor, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function ChancellorTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -83,7 +83,7 @@ export default function ChancellorTemplate({ content, themeColor, fontFamily }: 
       {/* Body */}
       <div style={{ padding: '8px 44px 36px 44px' }}>
         {/* Summary */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div>
             <h2 style={sectionHeadingStyle}>Summary</h2>
             <div style={sectionDividerStyle} />
@@ -92,7 +92,7 @@ export default function ChancellorTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div>
             <h2 style={sectionHeadingStyle}>Professional Experience</h2>
             <div style={sectionDividerStyle} />
@@ -130,7 +130,7 @@ export default function ChancellorTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div>
             <h2 style={sectionHeadingStyle}>Education</h2>
             <div style={sectionDividerStyle} />
@@ -165,7 +165,7 @@ export default function ChancellorTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Skills */}
-        {allSkills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div>
             <h2 style={sectionHeadingStyle}>Core Competencies</h2>
             <div style={sectionDividerStyle} />
@@ -176,7 +176,7 @@ export default function ChancellorTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div>
             <h2 style={sectionHeadingStyle}>Projects</h2>
             <div style={sectionDividerStyle} />
@@ -208,7 +208,7 @@ export default function ChancellorTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Certifications */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
           <div>
             <h2 style={sectionHeadingStyle}>Certifications</h2>
             <div style={sectionDividerStyle} />
@@ -227,7 +227,7 @@ export default function ChancellorTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Languages */}
-        {languages.length > 0 && (
+        {languages.length > 0 && !isSectionHidden(content, 'languages') && (
           <div>
             <h2 style={sectionHeadingStyle}>Languages</h2>
             <div style={sectionDividerStyle} />

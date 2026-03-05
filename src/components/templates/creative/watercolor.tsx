@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { pageContainerStyle, hexToRgb, lightenColor } from '../base-styles'
+import { pageContainerStyle, hexToRgb, lightenColor, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function WatercolorTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -135,7 +135,7 @@ export default function WatercolorTemplate({ content, themeColor, fontFamily }: 
       {/* Body */}
       <div style={{ padding: '12px 32px 28px' }}>
         {/* Summary */}
-        {summary && (
+        {summary && !isSectionHidden(content, 'summary') && (
           <div style={blobBg(0)}>
             <h2 style={sectionHeadingStyle}>Summary</h2>
             <p style={{ margin: 0, color: '#555', lineHeight: 1.8, fontSize: '10.5px' }}>{summary}</p>
@@ -143,7 +143,7 @@ export default function WatercolorTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Experience */}
-        {experience.length > 0 && (
+        {experience.length > 0 && !isSectionHidden(content, 'experience') && (
           <div style={blobBg(1)}>
             <h2 style={sectionHeadingStyle}>Experience</h2>
             {experience.map((exp) => (
@@ -182,7 +182,7 @@ export default function WatercolorTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Education */}
-        {education.length > 0 && (
+        {education.length > 0 && !isSectionHidden(content, 'education') && (
           <div style={blobBg(2)}>
             <h2 style={sectionHeadingStyle}>Education</h2>
             {education.map((edu) => (
@@ -216,7 +216,7 @@ export default function WatercolorTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Skills as pastel pills */}
-        {allSkills.length > 0 && (
+        {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
           <div style={blobBg(3)}>
             <h2 style={sectionHeadingStyle}>Skills</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
@@ -245,7 +245,7 @@ export default function WatercolorTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Projects */}
-        {projects.length > 0 && (
+        {projects.length > 0 && !isSectionHidden(content, 'projects') && (
           <div style={blobBg(0)}>
             <h2 style={sectionHeadingStyle}>Projects</h2>
             {projects.map((proj) => (
@@ -280,7 +280,7 @@ export default function WatercolorTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Certifications */}
-        {certifications.length > 0 && (
+        {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
           <div style={blobBg(1)}>
             <h2 style={sectionHeadingStyle}>Certifications</h2>
             {certifications.map((cert) => (
@@ -306,7 +306,7 @@ export default function WatercolorTemplate({ content, themeColor, fontFamily }: 
         )}
 
         {/* Languages */}
-        {languages.length > 0 && (
+        {languages.length > 0 && !isSectionHidden(content, 'languages') && (
           <div style={blobBg(2)}>
             <h2 style={sectionHeadingStyle}>Languages</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>

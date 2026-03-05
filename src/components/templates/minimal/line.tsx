@@ -1,6 +1,6 @@
 import React from 'react'
 import type { TemplateProps } from '../base-styles'
-import { pageContainerStyle } from '../base-styles'
+import { pageContainerStyle, isSectionHidden } from '../base-styles'
 import { getAllSkills, renderContactLine, formatDateRange } from '../section-helpers'
 
 export default function LineTemplate({ content, themeColor, fontFamily }: TemplateProps) {
@@ -75,14 +75,14 @@ export default function LineTemplate({ content, themeColor, fontFamily }: Templa
       />
 
       {/* Summary */}
-      {summary && (
+      {summary && !isSectionHidden(content, 'summary') && (
         <div style={sectionStyle}>
           <p style={{ ...bodyTextStyle, margin: 0 }}>{summary}</p>
         </div>
       )}
 
       {/* Experience */}
-      {experience.length > 0 && (
+      {experience.length > 0 && !isSectionHidden(content, 'experience') && (
         <div style={sectionStyle}>
           <h2 style={sectionHeadingStyle}>Experience</h2>
           {experience.map((exp, i) => (
@@ -111,7 +111,7 @@ export default function LineTemplate({ content, themeColor, fontFamily }: Templa
       )}
 
       {/* Education */}
-      {education.length > 0 && (
+      {education.length > 0 && !isSectionHidden(content, 'education') && (
         <div style={sectionStyle}>
           <h2 style={sectionHeadingStyle}>Education</h2>
           {education.map((edu, i) => (
@@ -138,7 +138,7 @@ export default function LineTemplate({ content, themeColor, fontFamily }: Templa
       )}
 
       {/* Skills */}
-      {allSkills.length > 0 && (
+      {allSkills.length > 0 && !isSectionHidden(content, 'skills') && (
         <div style={sectionStyle}>
           <h2 style={sectionHeadingStyle}>Skills</h2>
           <div style={bodyTextStyle}>
@@ -148,7 +148,7 @@ export default function LineTemplate({ content, themeColor, fontFamily }: Templa
       )}
 
       {/* Projects */}
-      {projects.length > 0 && (
+      {projects.length > 0 && !isSectionHidden(content, 'projects') && (
         <div style={sectionStyle}>
           <h2 style={sectionHeadingStyle}>Projects</h2>
           {projects.map((proj, i) => (
@@ -173,7 +173,7 @@ export default function LineTemplate({ content, themeColor, fontFamily }: Templa
       )}
 
       {/* Certifications */}
-      {certifications.length > 0 && (
+      {certifications.length > 0 && !isSectionHidden(content, 'certifications') && (
         <div style={sectionStyle}>
           <h2 style={sectionHeadingStyle}>Certifications</h2>
           {certifications.map((cert) => (
@@ -187,7 +187,7 @@ export default function LineTemplate({ content, themeColor, fontFamily }: Templa
       )}
 
       {/* Languages */}
-      {languages.length > 0 && (
+      {languages.length > 0 && !isSectionHidden(content, 'languages') && (
         <div style={sectionStyle}>
           <h2 style={sectionHeadingStyle}>Languages</h2>
           <div style={bodyTextStyle}>

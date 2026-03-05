@@ -5,6 +5,7 @@ import { FileText, PenLine } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Toolbar } from './toolbar'
+import { TemplateStrip } from './template-strip'
 import { FormPanel } from './form-panel'
 import { PreviewPanel } from './preview-panel'
 
@@ -15,6 +16,9 @@ export function EditorLayout() {
     <div className="flex h-screen flex-col">
       {/* Toolbar */}
       <Toolbar />
+
+      {/* Template Strip */}
+      <TemplateStrip />
 
       {/* Mobile toggle */}
       <div className="flex border-b bg-muted/30 md:hidden">
