@@ -25,8 +25,10 @@ export async function checkSubscription(): Promise<boolean> {
   return true
 }
 
-// DEV ONLY: Bypass payment for testing
+// DEV ONLY: Bypass payment for testing — blocked in production
 export async function activateDevSubscription(): Promise<boolean> {
+  if (process.env.NODE_ENV !== 'development') return false
+
   const supabase = await createClient()
   const {
     data: { user },

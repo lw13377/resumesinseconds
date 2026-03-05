@@ -12,6 +12,7 @@ import { SavedResumesPanel } from './saved-resumes-panel'
 
 export function EditorLayout() {
   const [mobileView, setMobileView] = useState<'form' | 'preview' | 'templates' | 'saved'>('form')
+  const [rightTab, setRightTab] = useState<'templates' | 'saved'>('templates')
 
   return (
     <div className="flex h-screen flex-col">
@@ -70,7 +71,7 @@ export function EditorLayout() {
         </Button>
       </div>
 
-      {/* Three-column split view */}
+      {/* Main layout */}
       <div className="flex flex-1 overflow-hidden">
         {/* Form Panel (left) */}
         <div
@@ -92,24 +93,65 @@ export function EditorLayout() {
           <PreviewPanel />
         </div>
 
-        {/* Template Sidebar (right) */}
+        {/* Right Sidebar — Templates + Saved (desktop: tabbed, mobile: separate views) */}
         <div
           className={cn(
             'w-full flex-shrink-0 overflow-hidden border-l md:w-[420px] lg:w-[480px]',
-            mobileView !== 'templates' && 'hidden md:block'
+            // On mobile, show when either templates or saved tab is active
+            mobileView !== 'templates' && mobileView !== 'saved' && 'hidden md:block'
           )}
         >
-          <TemplateSidebar />
-        </div>
+          <div className="flex h-full flex-col">
+            {/* Desktop tab switcher */}
+            <div className="hidden flex-shrink-0 border-b md:flex">
+              <button
+                type="button"
+                onClick={() => setRightTab('templates')}
+                className={cn(
+                  'flex flex-1 items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium transition-colors',
+                  rightTab === 'templates'
+                    ? 'border-b-2 border-primary text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <LayoutGrid className="h-3.5 w-3.5" />
+                Templates
+              </button>
+              <button
+                type="button"
+                onClick={() => setRightTab('saved')}
+                className={cn(
+                  'flex flex-1 items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium transition-colors',
+                  rightTab === 'saved'
+                    ? 'border-b-2 border-primary text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <FolderOpen className="h-3.5 w-3.5" />
+                Saved Resumes
+              </button>
+            </div>
 
-        {/* Saved Resumes (mobile only) */}
-        <div
-          className={cn(
-            'w-full overflow-hidden',
-            mobileView !== 'saved' && 'hidden'
-          )}
-        >
-          <SavedResumesPanel />
+            {/* Content — on mobile use mobileView, on desktop use rightTab */}
+            <div className="flex-1 overflow-hidden">
+              {/* Mobile: templates */}
+              <div className={cn('h-full', mobileView !== 'templates' && 'hidden md:hidden')}>
+                <TemplateSidebar />
+              </div>
+              {/* Mobile: saved */}
+              <div className={cn('h-full', mobileView !== 'saved' && 'hidden md:hidden')}>
+                <SavedResumesPanel />
+              </div>
+              {/* Desktop: templates */}
+              <div className={cn('hidden h-full', rightTab === 'templates' && 'md:block')}>
+                <TemplateSidebar />
+              </div>
+              {/* Desktop: saved */}
+              <div className={cn('hidden h-full', rightTab === 'saved' && 'md:block')}>
+                <SavedResumesPanel />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

@@ -85,7 +85,10 @@ export async function POST(request: NextRequest) {
 
         await getSupabaseAdmin()
           .from('profiles')
-          .update({ is_subscribed: false })
+          .update({
+            is_subscribed: false,
+            stripe_subscription_id: null,
+          })
           .eq('id', userId)
         break
       }
@@ -99,13 +102,14 @@ export async function POST(request: NextRequest) {
         const userId = sub.metadata?.supabase_user_id
         if (!userId) break
 
+        const periodEnd = (sub as unknown as { current_period_end: number }).current_period_end
         await getSupabaseAdmin()
           .from('profiles')
           .update({
             is_subscribed: true,
-            subscription_expires_at: new Date(
-              Date.now() + 35 * 24 * 60 * 60 * 1000,
-            ).toISOString(),
+            subscription_expires_at: periodEnd
+              ? new Date(periodEnd * 1000).toISOString()
+              : new Date(Date.now() + 35 * 24 * 60 * 60 * 1000).toISOString(),
           })
           .eq('id', userId)
         break
