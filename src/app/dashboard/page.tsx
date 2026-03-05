@@ -1,14 +1,18 @@
+import { Suspense } from 'react'
 import Link from 'next/link'
 import { Plus, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { ResumeCard } from '@/components/dashboard/resume-card'
+import { SubscriptionToast } from '@/components/dashboard/subscription-toast'
+import { ManageSubscription } from '@/components/dashboard/manage-subscription'
 import { getResumes } from '@/lib/actions/resume'
+import { checkSubscription } from '@/lib/actions/subscription'
 import { createClient } from '@/lib/supabase/server'
 import type { ResumeRow } from '@/types/database'
 
 export const metadata = {
-  title: 'Dashboard | ResumeForge',
+  title: 'Dashboard | Resumes in Seconds',
   description: 'Manage your resumes',
 }
 
@@ -18,10 +22,17 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const resumes = (await getResumes()) as ResumeRow[]
+  const [resumes, isSubscribed] = await Promise.all([
+    getResumes() as Promise<ResumeRow[]>,
+    checkSubscription(),
+  ])
 
   return (
     <div className="space-y-8">
+      <Suspense>
+        <SubscriptionToast />
+      </Suspense>
+
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -32,12 +43,15 @@ export default async function DashboardPage() {
             </p>
           )}
         </div>
-        <Button asChild size="default">
-          <Link href="/templates?select=true">
-            <Plus className="h-4 w-4" />
-            Create New Resume
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <ManageSubscription isSubscribed={isSubscribed} />
+          <Button asChild size="default">
+            <Link href="/templates?select=true">
+              <Plus className="h-4 w-4" />
+              Create New Resume
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <Separator />

@@ -7,21 +7,21 @@ const footerLinks = {
     title: "Product",
     links: [
       { label: "Templates", href: "/templates" },
-      { label: "Pricing", href: "#pricing" },
+      { label: "Pricing", href: "/#pricing" },
     ],
   },
   company: {
     title: "Company",
     links: [
-      { label: "About", href: "#" },
-      { label: "Contact", href: "#" },
+      { label: "About", href: "/about" },
+      { label: "Contact", href: "mailto:contact@resumesinseconds.com" },
     ],
   },
   legal: {
     title: "Legal",
     links: [
-      { label: "Privacy", href: "#" },
-      { label: "Terms", href: "#" },
+      { label: "Privacy", href: "/privacy" },
+      { label: "Terms", href: "/terms" },
     ],
   },
 };
@@ -37,7 +37,7 @@ export function Footer() {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                 <FileText className="h-4 w-4 text-primary-foreground" />
               </div>
-              <span className="text-lg font-bold tracking-tight">ResumeForge</span>
+              <span className="text-lg font-bold tracking-tight">Resumes in Seconds</span>
             </Link>
             <p className="mt-3 max-w-xs text-sm text-muted-foreground">
               Build professional resumes that help you land your dream job.
@@ -67,7 +67,7 @@ export function Footer() {
         <Separator className="my-8" />
 
         <p className="text-center text-sm text-muted-foreground">
-          &copy; 2024 ResumeForge. All rights reserved.
+          &copy; 2025 Resumes in Seconds. All rights reserved.
         </p>
       </div>
     </footer>

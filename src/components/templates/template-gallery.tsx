@@ -1,13 +1,18 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useEffect, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
+import { Lock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
 import { TEMPLATES, TEMPLATE_CATEGORIES, type TemplateInfo } from './template-registry'
 import { TemplateRenderer } from './template-renderer'
 import { SAMPLE_RESUME } from '@/lib/sample-data'
 import { PAGE_WIDTH, PAGE_HEIGHT } from './base-styles'
 import { createResume } from '@/lib/actions/resume'
+import { createClient } from '@/lib/supabase/client'
+import { checkSubscription } from '@/lib/actions/subscription'
 
 const CATEGORY_LABELS: Record<string, string> = {
   professional: 'Professional',
@@ -18,11 +23,17 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export function TemplateGallery() {
   const [activeCategory, setActiveCategory] = useState<string>('all')
+  const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null)
 
-  const filtered =
+  useEffect(() => {
+    checkSubscription().then(setIsSubscribed)
+  }, [])
+
+  const filtered = (
     activeCategory === 'all'
       ? TEMPLATES
       : TEMPLATES.filter((t) => t.category === activeCategory)
+  ).toSorted((a, b) => (a.premium ? 1 : 0) - (b.premium ? 1 : 0))
 
   return (
     <div>
@@ -61,28 +72,45 @@ export function TemplateGallery() {
       {/* Template Grid */}
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filtered.map((template) => (
-          <TemplateCard key={template.id} template={template} />
+          <TemplateCard key={template.id} template={template} locked={!!template.premium && isSubscribed === false} />
         ))}
       </div>
     </div>
   )
 }
 
-function TemplateCard({ template }: { template: TemplateInfo }) {
+function TemplateCard({ template, locked }: { template: TemplateInfo; locked: boolean }) {
   const [isPending, startTransition] = useTransition()
+  const router = useRouter()
   const scale = 220 / PAGE_WIDTH
 
   function handleSelect() {
+    if (locked) {
+      toast.error('Subscribe to unlock premium templates', {
+        description: 'This template is available with a Pro subscription.',
+      })
+      return
+    }
     startTransition(async () => {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        // Let guests use templates freely — no login required
+        router.push(`/editor/new?template=${encodeURIComponent(template.id)}`)
+        return
+      }
       await createResume(template.id)
     })
   }
 
   return (
-    <div className="group flex flex-col">
+    <div className="group relative flex flex-col">
       {/* Mini Preview */}
       <div
-        className="relative overflow-hidden rounded-lg border bg-white shadow-sm transition-shadow group-hover:shadow-lg"
+        className={cn(
+          'relative overflow-hidden rounded-lg border bg-white shadow-sm transition-shadow group-hover:shadow-lg',
+          locked && 'opacity-75'
+        )}
         style={{ height: `${PAGE_HEIGHT * scale + 8}px` }}
       >
         <div
@@ -102,20 +130,49 @@ function TemplateCard({ template }: { template: TemplateInfo }) {
           />
         </div>
 
-        {/* Hover overlay */}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/40 group-hover:opacity-100">
+        {/* Lock overlay for premium */}
+        {locked && (
+          <div className="absolute inset-0 flex items-center justify-center bg-background/60">
+            <div className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-sm">
+              <Lock className="h-3 w-3" />
+              Pro
+            </div>
+          </div>
+        )}
+
+        {/* Hover overlay (desktop) */}
+        <div className="absolute inset-0 hidden items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/40 group-hover:opacity-100 md:flex">
           <Button
             size="sm"
             onClick={handleSelect}
             disabled={isPending}
           >
-            {isPending ? 'Creating...' : 'Use Template'}
+            {isPending ? 'Creating...' : locked ? 'Pro Only' : 'Use Template'}
           </Button>
         </div>
       </div>
 
-      {/* New badge */}
-      {template.isNew && (
+      {/* Mobile-visible button below card */}
+      <div className="mt-2 md:hidden">
+        <Button
+          size="sm"
+          variant={locked ? 'outline' : 'default'}
+          className="w-full"
+          onClick={handleSelect}
+          disabled={isPending}
+        >
+          {isPending ? 'Creating...' : locked ? 'Pro Only' : 'Use Template'}
+        </Button>
+      </div>
+
+      {/* New / Pro badge */}
+      {template.premium && (
+        <div className="absolute top-2 right-2 z-10 flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold text-muted-foreground shadow-sm">
+          <Lock className="h-2.5 w-2.5" />
+          Pro
+        </div>
+      )}
+      {template.isNew && !template.premium && (
         <div className="absolute top-2 right-2 z-10 rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-primary-foreground shadow-sm">
           New
         </div>

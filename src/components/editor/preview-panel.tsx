@@ -1,30 +1,77 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
+import {
+  Check,
+  FileDown,
+  Loader2,
+  RotateCcw,
+  Save,
+  Undo2,
+  ZoomIn,
+  ZoomOut,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { DownloadModal } from './download-modal'
 import { useResume } from '@/hooks/use-resume'
 import { TemplateRenderer } from '@/components/templates/template-renderer'
 import { PAGE_WIDTH, PAGE_HEIGHT } from '@/components/templates/base-styles'
+import { checkSubscription } from '@/lib/actions/subscription'
 
 export function PreviewPanel() {
-  const { templateId, content, themeColor, fontFamily } = useResume()
+  const {
+    templateId,
+    content,
+    themeColor,
+    fontFamily,
+    saveStatus,
+    hasUnsavedChanges,
+    saveResume,
+    discardChanges,
+    mode,
+  } = useResume()
   const containerRef = useRef<HTMLDivElement>(null)
   const [zoom, setZoom] = useState(1)
   const [autoScale, setAutoScale] = useState(1)
+  const [showDownload, setShowDownload] = useState(false)
+  const [isHidden, setIsHidden] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useState(true)
 
-  // Calculate scale to fit container
+  // Check subscription status
+  useEffect(() => {
+    if (mode === 'guest') {
+      setIsSubscribed(false)
+    } else {
+      checkSubscription().then(setIsSubscribed)
+    }
+  }, [mode])
+
+  const isSaving = saveStatus === 'saving'
+
+  // Screenshot deterrence: blur when tab is hidden
+  useEffect(() => {
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        setIsHidden(true)
+      } else {
+        setTimeout(() => setIsHidden(false), 300)
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [])
+
+  // Calculate scale to fit container — fills available space
   useEffect(() => {
     function calcScale() {
       if (!containerRef.current) return
       const rect = containerRef.current.getBoundingClientRect()
-      const padding = 40
-      const availW = rect.width - padding
-      const availH = rect.height - padding
+      const availW = rect.width - 24
+      const availH = rect.height - 24
       const scaleW = availW / PAGE_WIDTH
       const scaleH = availH / PAGE_HEIGHT
-      setAutoScale(Math.min(scaleW, scaleH, 1))
+      setAutoScale(Math.min(scaleW, scaleH, 1.15))
     }
 
     calcScale()
@@ -51,59 +98,110 @@ export function PreviewPanel() {
 
   return (
     <div className="flex h-full flex-col">
-      {/* Zoom Controls */}
-      <div className="flex items-center justify-center gap-1 border-b bg-muted/20 px-3 py-1.5">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={() => setZoom((z) => Math.max(0.5, z - 0.1))}
-              disabled={zoom <= 0.5}
-            >
-              <ZoomOut className="h-3.5 w-3.5" />
+      {/* Action bar: save/discard/pdf + zoom */}
+      <div className="flex flex-shrink-0 flex-wrap items-center gap-1 border-b bg-muted/20 px-2 py-1.5 sm:px-3">
+        {/* Save / Discard / PDF */}
+        <div className="flex items-center gap-1 sm:gap-1.5">
+          {hasUnsavedChanges && (
+            <Button variant="ghost" size="sm" onClick={discardChanges} className="hidden sm:inline-flex">
+              <Undo2 className="h-4 w-4" />
+              Discard
             </Button>
-          </TooltipTrigger>
-          <TooltipContent>Zoom Out</TooltipContent>
-        </Tooltip>
-
-        <span className="min-w-[3.5rem] text-center text-xs text-muted-foreground">
-          {Math.round(effectiveScale * 100)}%
-        </span>
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={() => setZoom((z) => Math.min(2, z + 0.1))}
-              disabled={zoom >= 2}
-            >
-              <ZoomIn className="h-3.5 w-3.5" />
+          )}
+          {hasUnsavedChanges && (
+            <Button variant="ghost" size="icon-sm" onClick={discardChanges} className="sm:hidden">
+              <Undo2 className="h-4 w-4" />
             </Button>
-          </TooltipTrigger>
-          <TooltipContent>Zoom In</TooltipContent>
-        </Tooltip>
+          )}
 
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={() => setZoom(1)}
-              disabled={zoom === 1}
-            >
-              <RotateCcw className="h-3.5 w-3.5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Reset Zoom</TooltipContent>
-        </Tooltip>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={saveResume}
+            disabled={!hasUnsavedChanges || isSaving}
+          >
+            {isSaving ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : saveStatus === 'saved' && !hasUnsavedChanges ? (
+              <Check className="h-4 w-4" />
+            ) : (
+              <Save className="h-4 w-4" />
+            )}
+            <span className="hidden sm:inline">
+              {isSaving
+                ? 'Saving...'
+                : saveStatus === 'saved' && !hasUnsavedChanges
+                  ? 'Saved'
+                  : 'Save'}
+            </span>
+          </Button>
+
+          <Button
+            variant="default"
+            size="sm"
+            onClick={() => setShowDownload(true)}
+          >
+            <FileDown className="h-4 w-4" />
+            <span className="hidden sm:inline">Download</span>
+          </Button>
+        </div>
+
+        {/* Zoom controls — pushed right, hidden on mobile */}
+        <div className="ml-auto hidden items-center gap-0.5 sm:flex">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => setZoom((z) => Math.max(0.5, z - 0.1))}
+                disabled={zoom <= 0.5}
+              >
+                <ZoomOut className="h-3.5 w-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Zoom Out</TooltipContent>
+          </Tooltip>
+
+          <span className="min-w-[3rem] text-center text-xs text-muted-foreground">
+            {Math.round(effectiveScale * 100)}%
+          </span>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => setZoom((z) => Math.min(2, z + 0.1))}
+                disabled={zoom >= 2}
+              >
+                <ZoomIn className="h-3.5 w-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Zoom In</TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => setZoom(1)}
+                disabled={zoom === 1}
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Reset Zoom</TooltipContent>
+          </Tooltip>
+        </div>
       </div>
 
       {/* Preview Area */}
       <div
         ref={containerRef}
-        className="flex flex-1 items-start justify-center overflow-auto bg-muted/30 p-5"
+        className="relative flex flex-1 items-start justify-center overflow-auto bg-muted/30 p-3"
+        style={{ userSelect: 'none' }}
+        onContextMenu={(e) => e.preventDefault()}
       >
         <div
           style={{
@@ -112,8 +210,10 @@ export function PreviewPanel() {
             width: `${PAGE_WIDTH}px`,
             minHeight: `${PAGE_HEIGHT}px`,
             opacity,
+            filter: isHidden ? 'blur(20px)' : 'none',
+            transition: 'filter 0.3s ease, opacity 0.2s ease',
           }}
-          className="shadow-xl transition-opacity duration-200"
+          className="relative shadow-xl"
         >
           <TemplateRenderer
             templateId={templateId}
@@ -121,8 +221,35 @@ export function PreviewPanel() {
             themeColor={themeColor}
             fontFamily={fontFamily}
           />
+          {/* Watermark for non-subscribers */}
+          {!isSubscribed && (
+            <div
+              className="pointer-events-none absolute inset-0 flex items-center justify-center"
+              style={{
+                transform: 'rotate(-30deg)',
+              }}
+            >
+              <span
+                className="select-none text-center font-bold uppercase tracking-widest"
+                style={{
+                  fontSize: '64px',
+                  color: 'rgba(0,0,0,0.06)',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                PREVIEW
+              </span>
+            </div>
+          )}
         </div>
+        {isHidden && (
+          <div className="absolute inset-0 flex items-center justify-center bg-background/50">
+            <p className="text-lg font-medium text-muted-foreground">Resume hidden</p>
+          </div>
+        )}
       </div>
+
+      <DownloadModal open={showDownload} onOpenChange={setShowDownload} />
     </div>
   )
 }

@@ -31,10 +31,10 @@ export function CollapsibleSection({
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex flex-1 items-center gap-2.5 px-4 py-3 text-left transition-colors hover:bg-accent/50"
+          className="flex flex-1 items-center gap-2.5 px-5 py-3.5 text-left transition-colors hover:bg-accent/50"
         >
           <span className="text-muted-foreground">{icon}</span>
-          <span className="text-sm font-medium">{title}</span>
+          <span className="text-base font-medium">{title}</span>
           {hidden && (
             <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
               Hidden
@@ -51,7 +51,7 @@ export function CollapsibleSection({
           <button
             type="button"
             onClick={onToggleVisibility}
-            className="flex items-center justify-center px-3 py-3 text-muted-foreground transition-colors hover:text-foreground"
+            className="flex items-center justify-center px-3 py-3.5 text-muted-foreground transition-colors hover:text-foreground"
             title={hidden ? 'Show in resume' : 'Hide from resume'}
           >
             {hidden ? (
@@ -63,7 +63,7 @@ export function CollapsibleSection({
         )}
       </div>
       {isOpen && (
-        <div className="border-t px-4 py-4">
+        <div className="border-t px-5 py-5">
           {children}
         </div>
       )}

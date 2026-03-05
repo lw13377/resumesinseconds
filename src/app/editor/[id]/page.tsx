@@ -6,7 +6,7 @@ import type { ResumeRow } from '@/types/database'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Editor | ResumeForge',
+  title: 'Editor | Resumes in Seconds',
   description: 'Edit your resume',
 }
 

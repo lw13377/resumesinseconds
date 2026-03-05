@@ -4,7 +4,7 @@ import { TemplateGallery } from '@/components/templates/template-gallery'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Templates | ResumeForge',
+  title: 'Templates | Resumes in Seconds',
   description: 'Browse 50 professionally designed resume templates across 4 categories',
 }
 

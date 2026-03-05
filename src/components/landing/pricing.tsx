@@ -1,7 +1,13 @@
+'use client'
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Check, Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Check, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+import { createClient } from "@/lib/supabase/client";
 
 interface PricingFeature {
   text: string;
@@ -14,6 +20,7 @@ interface PricingPlan {
   description: string;
   features: PricingFeature[];
   cta: string;
+  href: string;
   highlighted: boolean;
 }
 
@@ -25,11 +32,12 @@ const plans: PricingPlan[] = [
     description: "Everything you need to build your first resume",
     features: [
       { text: "Build unlimited resumes" },
-      { text: "20+ professional templates" },
+      { text: "50+ professional templates" },
       { text: "Live preview" },
       { text: "Color & font customization" },
     ],
     cta: "Start Free",
+    href: "/editor/new",
     highlighted: false,
   },
   {
@@ -44,13 +52,44 @@ const plans: PricingPlan[] = [
       { text: "Early access to new templates" },
     ],
     cta: "Get Pro",
+    href: "/login?redirect=/dashboard",
     highlighted: true,
   },
 ];
 
 export function Pricing() {
+  const router = useRouter()
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [checkoutLoading, setCheckoutLoading] = useState(false)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => setIsLoggedIn(!!data.user))
+  }, [])
+
+  async function handleGetPro() {
+    if (!isLoggedIn) {
+      router.push('/login?redirect=/dashboard')
+      return
+    }
+    setCheckoutLoading(true)
+    try {
+      const res = await fetch('/api/stripe/checkout', { method: 'POST' })
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        toast.error(data.error || 'Failed to start checkout')
+        setCheckoutLoading(false)
+      }
+    } catch {
+      toast.error('Something went wrong. Please try again.')
+      setCheckoutLoading(false)
+    }
+  }
+
   return (
-    <section id="pricing" className="relative py-20 sm:py-28 scroll-mt-20">
+    <section id="pricing" className="relative overflow-hidden py-20 sm:py-28 scroll-mt-20">
       {/* Background decoration */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-muted/20 to-transparent" />
@@ -118,18 +157,32 @@ export function Pricing() {
               </ul>
 
               {/* CTA */}
-              <Button
-                size="lg"
-                variant={plan.highlighted ? "default" : "outline"}
-                asChild
-                className={`w-full ${
-                  plan.highlighted
-                    ? "h-12 font-semibold shadow-lg shadow-primary/25"
-                    : "h-12"
-                }`}
-              >
-                <Link href="/login">{plan.cta}</Link>
-              </Button>
+              {plan.highlighted ? (
+                <Button
+                  size="lg"
+                  className="w-full h-12 font-semibold shadow-lg shadow-primary/25"
+                  disabled={checkoutLoading}
+                  onClick={handleGetPro}
+                >
+                  {checkoutLoading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Redirecting…
+                    </>
+                  ) : (
+                    plan.cta
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  size="lg"
+                  variant="outline"
+                  asChild
+                  className="w-full h-12"
+                >
+                  <Link href={plan.href}>{plan.cta}</Link>
+                </Button>
+              )}
             </div>
           ))}
         </div>

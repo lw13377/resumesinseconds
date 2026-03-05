@@ -6,7 +6,7 @@ import { Footer } from "@/components/landing/footer";
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen scroll-smooth">
+    <div className="relative min-h-screen scroll-smooth overflow-x-hidden">
       <Navbar />
       <main>
         <Hero />

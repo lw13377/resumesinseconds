@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 import { SAMPLE_RESUME } from '@/lib/sample-data'
 
 export async function getResumes() {
@@ -39,6 +40,7 @@ export async function deleteResume(id: string) {
   const supabase = await createClient()
   const { error } = await supabase.from('resumes').delete().eq('id', id)
   if (error) throw error
+  revalidatePath('/dashboard')
 }
 
 export async function updateResumeTitle(id: string, title: string) {

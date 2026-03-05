@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { Download, Loader2, CreditCard, Sparkles } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { AlertTriangle, Download, Loader2, CreditCard, Sparkles, UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -21,19 +22,23 @@ interface DownloadModalProps {
 }
 
 export function DownloadModal({ open, onOpenChange }: DownloadModalProps) {
-  const { id, title } = useResume()
+  const { id, title, hasUnsavedChanges, mode } = useResume()
   const [downloading, setDownloading] = useState(false)
+  const [subscribing, setSubscribing] = useState(false)
   const [activating, setActivating] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null)
 
-  async function handleDownload() {
+  // Check subscription status when modal opens (skip for guests)
+  useEffect(() => {
+    if (open && mode === 'authenticated') {
+      setIsSubscribed(null)
+      checkSubscription().then(setIsSubscribed)
+    }
+  }, [open, mode])
+
+  async function downloadPdf() {
     setDownloading(true)
     try {
-      const isSubscribed = await checkSubscription()
-      if (!isSubscribed) {
-        setDownloading(false)
-        return // Stay on modal to show upgrade prompt
-      }
-
       const res = await fetch(`/api/resume/download?id=${id}`)
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
@@ -59,13 +64,33 @@ export function DownloadModal({ open, onOpenChange }: DownloadModalProps) {
     }
   }
 
+  async function handleSubscribe() {
+    setSubscribing(true)
+    try {
+      const res = await fetch('/api/stripe/checkout', { method: 'POST' })
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to start checkout')
+      }
+
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to start checkout')
+      setSubscribing(false)
+    }
+  }
+
   async function handleDevBypass() {
     setActivating(true)
     try {
       const ok = await activateDevSubscription()
       if (ok) {
         toast.success('Dev subscription activated!')
-        await handleDownload()
+        setIsSubscribed(true)
+        await downloadPdf()
       } else {
         toast.error('Failed to activate dev subscription')
       }
@@ -76,6 +101,92 @@ export function DownloadModal({ open, onOpenChange }: DownloadModalProps) {
     }
   }
 
+  // Guest mode — prompt to create account
+  if (mode === 'guest') {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <UserPlus className="h-5 w-5" />
+              Create an Account
+            </DialogTitle>
+            <DialogDescription>
+              Create a free account to save your resume and download it as a PDF.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div className="rounded-lg border bg-muted/30 p-4 text-center">
+              <p className="text-sm text-muted-foreground">
+                Your resume data will be saved. Sign up to unlock PDF downloads.
+              </p>
+            </div>
+            <Button className="w-full" size="lg" asChild>
+              <Link href="/login?redirect=/editor/new">
+                <UserPlus className="h-4 w-4" />
+                Create Free Account
+              </Link>
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
+  // Loading state while checking subscription
+  if (isSubscribed === null) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-md">
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          </div>
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
+  // Subscribed — show direct download
+  if (isSubscribed) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Download className="h-5 w-5" />
+              Download PDF
+            </DialogTitle>
+            <DialogDescription>
+              Download your resume as a professional PDF file.
+            </DialogDescription>
+          </DialogHeader>
+
+          {hasUnsavedChanges && (
+            <div className="flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-700 dark:bg-amber-950/30 dark:text-amber-300">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+              Save your resume first to include latest edits.
+            </div>
+          )}
+
+          <Button
+            className="w-full"
+            size="lg"
+            onClick={downloadPdf}
+            disabled={downloading}
+          >
+            {downloading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4" />
+            )}
+            {downloading ? 'Generating PDF...' : 'Download PDF'}
+          </Button>
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
+  // Not subscribed — show paywall
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -85,16 +196,23 @@ export function DownloadModal({ open, onOpenChange }: DownloadModalProps) {
             Download PDF
           </DialogTitle>
           <DialogDescription>
-            Download your resume as a professional PDF file.
+            Subscribe to download your resume as a professional PDF file.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 pt-2">
+          {hasUnsavedChanges && (
+            <div className="flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-700 dark:bg-amber-950/30 dark:text-amber-300">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+              Save your resume first to include latest edits.
+            </div>
+          )}
+
           {/* Pricing Card */}
           <div className="rounded-lg border bg-muted/30 p-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-semibold">ResumeForge Pro</h3>
+                <h3 className="font-semibold">Pro Plan</h3>
                 <p className="text-sm text-muted-foreground">Unlimited PDF downloads</p>
               </div>
               <div className="text-right">
@@ -118,49 +236,46 @@ export function DownloadModal({ open, onOpenChange }: DownloadModalProps) {
             </ul>
           </div>
 
-          {/* Subscribe Button (Stripe placeholder) */}
-          <Button className="w-full" size="lg" disabled>
-            <CreditCard className="h-4 w-4" />
-            Subscribe — Coming Soon
-          </Button>
-
-          <Separator />
-
-          {/* Already subscribed? Download */}
+          {/* Subscribe Button */}
           <Button
-            variant="outline"
             className="w-full"
-            onClick={handleDownload}
-            disabled={downloading}
+            size="lg"
+            onClick={handleSubscribe}
+            disabled={subscribing}
           >
-            {downloading ? (
+            {subscribing ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <Download className="h-4 w-4" />
+              <CreditCard className="h-4 w-4" />
             )}
-            {downloading ? 'Generating PDF...' : 'Download (if subscribed)'}
+            {subscribing ? 'Redirecting to checkout...' : 'Subscribe — $2/mo'}
           </Button>
 
-          {/* Dev bypass */}
-          <div className="rounded border border-dashed border-yellow-500/50 bg-yellow-50/50 p-3 dark:bg-yellow-900/10">
-            <p className="mb-2 text-xs font-medium text-yellow-700 dark:text-yellow-400">
-              DEV MODE — Bypass payment for testing
-            </p>
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full border-yellow-500/50 text-yellow-700 hover:bg-yellow-100 dark:text-yellow-400"
-              onClick={handleDevBypass}
-              disabled={activating || downloading}
-            >
-              {activating ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <Sparkles className="h-3.5 w-3.5" />
-              )}
-              {activating ? 'Activating...' : 'Activate Free & Download'}
-            </Button>
-          </div>
+          {/* Dev bypass — only in development */}
+          {process.env.NODE_ENV === 'development' && (
+            <>
+              <Separator />
+              <div className="rounded border border-dashed border-yellow-500/50 bg-yellow-50/50 p-3 dark:bg-yellow-900/10">
+                <p className="mb-2 text-xs font-medium text-yellow-700 dark:text-yellow-400">
+                  DEV MODE — Bypass payment for testing
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full border-yellow-500/50 text-yellow-700 hover:bg-yellow-100 dark:text-yellow-400"
+                  onClick={handleDevBypass}
+                  disabled={activating || downloading}
+                >
+                  {activating ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Sparkles className="h-3.5 w-3.5" />
+                  )}
+                  {activating ? 'Activating...' : 'Activate Free & Download'}
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>

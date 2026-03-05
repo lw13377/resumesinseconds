@@ -79,9 +79,9 @@ function TemplateCard({ template }: { template: Template }) {
           variant="outline"
           size="sm"
           asChild
-          className="mt-3 w-full text-xs opacity-0 transition-all duration-300 group-hover:opacity-100"
+          className="mt-3 w-full text-xs md:opacity-0 md:transition-all md:duration-300 md:group-hover:opacity-100"
         >
-          <Link href="/login">Use Template</Link>
+          <Link href="/editor/new">Use Template</Link>
         </Button>
       </div>
     </div>

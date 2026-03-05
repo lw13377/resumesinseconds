@@ -3,7 +3,7 @@ import { ArrowRight, Palette, Download, Type, LayoutTemplate } from "lucide-reac
 import { Button } from "@/components/ui/button";
 
 const stats = [
-  { icon: LayoutTemplate, label: "20+ Templates", description: "Professional designs" },
+  { icon: LayoutTemplate, label: "50+ Templates", description: "Professional designs" },
   { icon: Type, label: "10 Fonts", description: "Curated typography" },
   { icon: Palette, label: "Unlimited Colors", description: "Full customization" },
   { icon: Download, label: "PDF Download", description: "Print-ready exports" },
@@ -36,17 +36,17 @@ export function Hero() {
               <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                 Resume
               </span>{" "}
-              in Minutes
+              in Seconds
             </h1>
 
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground sm:text-xl">
-              Create stunning, professional resumes with 20+ customizable templates.
+              Create stunning, professional resumes with 50+ customizable templates.
               Stand out from the crowd and land your dream job.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Button size="lg" asChild className="h-12 px-8 text-base font-semibold shadow-lg shadow-primary/25">
-                <Link href="/login">
+                <Link href="/editor/new">
                   Start Building — It&apos;s Free
                   <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>
