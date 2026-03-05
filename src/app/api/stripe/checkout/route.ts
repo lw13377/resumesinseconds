@@ -17,9 +17,24 @@ export async function POST() {
     // Get profile to check for existing Stripe customer
     const { data: profile } = await getSupabaseAdmin()
       .from('profiles')
-      .select('stripe_customer_id')
+      .select('stripe_customer_id, is_subscribed, subscription_expires_at')
       .eq('id', user.id)
       .single()
+
+    // Already subscribed — redirect to billing portal instead
+    if (
+      profile?.is_subscribed &&
+      profile?.stripe_customer_id &&
+      (!profile.subscription_expires_at ||
+        new Date(profile.subscription_expires_at) > new Date())
+    ) {
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+      const portalSession = await getStripe().billingPortal.sessions.create({
+        customer: profile.stripe_customer_id,
+        return_url: `${appUrl}/dashboard`,
+      })
+      return NextResponse.json({ url: portalSession.url })
+    }
 
     let customerId = profile?.stripe_customer_id
 

@@ -64,39 +64,16 @@ const plans: PricingPlan[] = [
 export function Pricing() {
   const router = useRouter()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [isSubscribed, setIsSubscribed] = useState(false)
   const [checkoutLoading, setCheckoutLoading] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
-    supabase.auth.getUser().then(({ data }) => {
-      setIsLoggedIn(!!data.user)
-      if (data.user) {
-        supabase
-          .from('profiles')
-          .select('is_subscribed, subscription_expires_at')
-          .eq('id', data.user.id)
-          .single()
-          .then(({ data: profile }) => {
-            if (
-              profile?.is_subscribed &&
-              (!profile.subscription_expires_at ||
-                new Date(profile.subscription_expires_at) > new Date())
-            ) {
-              setIsSubscribed(true)
-            }
-          })
-      }
-    })
+    supabase.auth.getUser().then(({ data }) => setIsLoggedIn(!!data.user))
   }, [])
 
   async function handleGetPro() {
     if (!isLoggedIn) {
       router.push('/login?redirect=/dashboard')
-      return
-    }
-    if (isSubscribed) {
-      router.push('/dashboard')
       return
     }
     setCheckoutLoading(true)
@@ -202,8 +179,6 @@ export function Pricing() {
                       <Loader2 className="h-4 w-4 animate-spin" />
                       Redirecting…
                     </>
-                  ) : isSubscribed ? (
-                    "Go to Dashboard"
                   ) : (
                     plan.cta
                   )}
