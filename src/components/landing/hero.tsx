@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 const stats = [
   { icon: LayoutTemplate, label: "50+ Templates", description: "Professional designs" },
   { icon: Type, label: "10 Fonts", description: "Curated typography" },
-  { icon: Palette, label: "Unlimited Colors", description: "Full customization" },
+  { icon: Palette, label: "40+ Colors", description: "Curated palettes" },
   { icon: Download, label: "PDF Download", description: "Print-ready exports" },
 ];
 
